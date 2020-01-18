@@ -1,5 +1,5 @@
 {
-	"name": "express_swagger",
+	"name": "@donatocardoso/express-swagger",
 	"description": "Utilizando Express com Swagger",
 	"keywords": [
 		"api",
@@ -9,10 +9,13 @@
 	],
 	"author": "Donato Cardoso Ávila",
 	"license": "MIT",
-	"version": "2.0.0",
+	"version": "1.0.0",
 	"main": "./index.js",
+	"repository": {
+		"url": "https://github.com/donatocardoso/express-swagger.git"
+	},
 	"publishConfig": { 
-		"registry": "https://npm.pkg.github.com/" 
+		"registry": "https://npm.pkg.github.com/"
 	},
 	"dependencies": {
 		"@types/cli-color": "^2.0.0",

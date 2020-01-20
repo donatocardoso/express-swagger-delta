@@ -1,6 +1,7 @@
 {
 	"name": "@donatocardoso/express-swagger",
 	"description": "Utilizando Express com Swagger",
+	"homepage": "https://github.com/donatocardoso/express-swagger#readme",
 	"keywords": [
 		"api",
 		"node",
@@ -9,12 +10,11 @@
 	],
 	"author": "Donato Cardoso Ávila",
 	"license": "MIT",
-	"version": "1.0.8",
+	"version": "1.0.9",
 	"main": "./dist/index.js",
-	"type": "module",
-	"types": "./types/*",
-	"typings": "./types/*",
+	"types": "types",
 	"repository": {
+		"type": "git",
 		"url": "https://github.com/donatocardoso/express-swagger.git"
 	},
 	"publishConfig": {

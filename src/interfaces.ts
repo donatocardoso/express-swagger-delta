@@ -13,7 +13,7 @@ export interface IBaseRoute
   handler: Function;
 }
 
-export interface IInformation 
+export interface IInformation
 {
   name: string,
   title: string,
@@ -21,7 +21,7 @@ export interface IInformation
   description: string
 }
 
-export interface IServerConfig 
+export interface IServer
 {
   url: string
 }
@@ -31,11 +31,11 @@ export interface IAnyObject
   [key: string]: object;
 }
 
-export interface ISpecification 
+export interface ISpecification
 {
   openapi: string,
   info: IInformation,
-  servers: Array<IServerConfig>
+  servers: Array<IServer>
   components: IAnyObject,
   paths: IAnyObject
 }
@@ -46,7 +46,7 @@ export interface ISwaggerProps
   specification: ISpecification
 }
 
-export interface IServer 
+export interface IExpressSwagger
 {
   NODE_ENV: string;
   BASE_HOST: string;

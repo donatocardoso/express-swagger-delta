@@ -3,20 +3,20 @@ import * as SwaggerUi from 'swagger-ui-express';
 import express, { Express, Router } from 'express';
 
 import {
-  IServer,
+  IExpressSwagger,
   ISwaggerProps,
   ISpecification,
   IInformation,
-  IServerConfig,
+  IServer,
   IAnyObject,
   IBaseRoute
 } from "./interfaces";
 
-class AnyObject implements IAnyObject {
+export class AnyObject implements IAnyObject {
   [key: string]: object;
 }
 
-class ServerConfig implements IServerConfig {
+export class Server implements IServer {
   url: string;
 
   constructor() {
@@ -24,7 +24,7 @@ class ServerConfig implements IServerConfig {
   }
 }
 
-class Information implements IInformation {
+export class Information implements IInformation {
   name: string;
   title: string;
   version: string;
@@ -38,13 +38,13 @@ class Information implements IInformation {
   }
 }
 
-class Layout implements SwaggerUi.SwaggerUiOptions {
+export class Layout implements SwaggerUi.SwaggerUiOptions {
 }
 
-class Specification implements ISpecification {
+export class Specification implements ISpecification {
   openapi: string;
   info: IInformation;
-  servers: IServerConfig[];
+  servers: IServer[];
   components: IAnyObject;
   paths: IAnyObject;
 
@@ -57,7 +57,7 @@ class Specification implements ISpecification {
   }
 }
 
-class SwaggerProps implements ISwaggerProps {
+export class SwaggerProps implements ISwaggerProps {
   layout: SwaggerUi.SwaggerUiOptions;
   specification: ISpecification;
 
@@ -67,7 +67,7 @@ class SwaggerProps implements ISwaggerProps {
   }
 }
 
-class Server implements IServer {
+export class ExpressSwagger implements IExpressSwagger {
   NODE_ENV: string;
   BASE_HOST: string;
   BASE_PATH: string;
@@ -176,13 +176,3 @@ class Server implements IServer {
     return false;
   }
 }
-
-export default {
-  AnyObject: new AnyObject(),
-  ServerConfig: new ServerConfig(),
-  Information: new Information(),
-  Layout: new Layout(),
-  Specification: new Specification(),
-  SwaggerProps: new SwaggerProps(),
-  Server: new Server(),
-};

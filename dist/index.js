@@ -15,11 +15,13 @@ const SwaggerUi = __importStar(require("swagger-ui-express"));
 const express_1 = __importDefault(require("express"));
 class AnyObject {
 }
-class ServerConfig {
+exports.AnyObject = AnyObject;
+class Server {
     constructor() {
         this.url = "";
     }
 }
+exports.Server = Server;
 class Information {
     constructor() {
         this.name = "";
@@ -28,8 +30,10 @@ class Information {
         this.description = "";
     }
 }
+exports.Information = Information;
 class Layout {
 }
+exports.Layout = Layout;
 class Specification {
     constructor() {
         this.openapi = "3.0.0";
@@ -39,13 +43,15 @@ class Specification {
         this.paths = new AnyObject();
     }
 }
+exports.Specification = Specification;
 class SwaggerProps {
     constructor() {
         this.layout = new Layout();
         this.specification = new Specification();
     }
 }
-class Server {
+exports.SwaggerProps = SwaggerProps;
+class ExpressSwagger {
     constructor() {
         this.NODE_ENV = "";
         this.BASE_HOST = "";
@@ -136,13 +142,5 @@ class Server {
         return false;
     }
 }
-exports.default = {
-    AnyObject: new AnyObject(),
-    ServerConfig: new ServerConfig(),
-    Information: new Information(),
-    Layout: new Layout(),
-    Specification: new Specification(),
-    SwaggerProps: new SwaggerProps(),
-    Server: new Server(),
-};
+exports.ExpressSwagger = ExpressSwagger;
 //# sourceMappingURL=index.js.map

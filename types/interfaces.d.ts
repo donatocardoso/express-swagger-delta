@@ -16,7 +16,7 @@ export interface IInformation {
     version: string;
     description: string;
 }
-export interface IServerConfig {
+export interface IServer {
     url: string;
 }
 export interface IAnyObject {
@@ -25,7 +25,7 @@ export interface IAnyObject {
 export interface ISpecification {
     openapi: string;
     info: IInformation;
-    servers: Array<IServerConfig>;
+    servers: Array<IServer>;
     components: IAnyObject;
     paths: IAnyObject;
 }
@@ -33,7 +33,7 @@ export interface ISwaggerProps {
     layout: SwaggerUiOptions;
     specification: ISpecification;
 }
-export interface IServer {
+export interface IExpressSwagger {
     NODE_ENV: string;
     BASE_HOST: string;
     BASE_PATH: string;

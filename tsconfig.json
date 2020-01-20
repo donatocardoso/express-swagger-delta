@@ -1,6 +1,7 @@
 {
 	"compilerOptions": {
-		"allowJs": true,
+		"allowJs": false,
+		"declaration": true,
 		"esModuleInterop": true,
 		"lib": ["ES6"],
 		"module": "commonjs",
@@ -13,9 +14,8 @@
 	},
 	"include": [
 		"./src/**/*.ts",
-		"./@types/**/*.ts"
 	],
 	"exclude": [
-		"./node_modules/*"
+		"./node_modules/*",
 	]
 }

@@ -1,6 +1,6 @@
 import { Express, Router } from 'express';
 import { SwaggerUiOptions } from 'swagger-ui-express';
-import { PathParams } from "express-serve-static-core";
+import { PathParams } from 'express-serve-static-core';
 
 export interface IBaseRoute
 {

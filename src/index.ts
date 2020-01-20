@@ -1,7 +1,6 @@
 import color from 'cli-color';
-import express, { Router } from 'express';
 import * as SwaggerUi from 'swagger-ui-express';
-import { Express } from 'express';
+import express, { Express, Router } from 'express';
 
 import {
   IServer,

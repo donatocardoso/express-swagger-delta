@@ -1,16 +1,18 @@
 {
 	"compilerOptions": {
-		"outDir": "./dist/",
-		"strict": true,
-		"sourceMap": true,
-		"noImplicitAny": true,
+		"allowJs": true,
 		"esModuleInterop": true,
-		"module": "commonjs",
 		"lib": ["ES6"],
+		"module": "commonjs",
+		"noImplicitAny": true,
+		"outDir": "./dist/",
+		"sourceMap": true,
+		"strict": true,
+		"strictNullChecks": true,
 		"target": "es6"
 	},
 	"include": [
-		"lib/**/*.ts"
+		"@types/**/*.ts"
 	],
 	"exclude": [
 		"node_modules/*"

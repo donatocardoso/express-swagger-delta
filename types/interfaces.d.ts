@@ -45,3 +45,4 @@ export interface IServer {
     setSwaggerProps(props: ISwaggerProps): void;
     listen(): void;
 }
+//# sourceMappingURL=interfaces.d.ts.map

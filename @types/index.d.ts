@@ -1,6 +1,6 @@
 /// <reference types="node" />
 
-declare module 'express-swagger' {
+declare module '@donatocardoso/express-swagger' {
   import color from 'cli-color';
   import * as SwaggerUi from 'swagger-ui-express';
   import express, { Express, Router } from 'express';

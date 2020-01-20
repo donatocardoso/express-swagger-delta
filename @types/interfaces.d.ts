@@ -1,6 +1,6 @@
 /// <reference types='node' />
 
-declare module 'express-swagger' {
+declare module '@donatocardoso/express-swagger' {
   import { Express, Router } from 'express';
   import { SwaggerUiOptions } from 'swagger-ui-express';
   import { PathParams } from 'express-serve-static-core';

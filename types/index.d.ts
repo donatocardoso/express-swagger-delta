@@ -46,12 +46,12 @@ declare class Server implements IServer {
     showMessage(msg: string): boolean;
 }
 declare const _default: {
-    AnyObject: AnyObject;
-    ServerConfig: ServerConfig;
-    Information: Information;
-    Layout: Layout;
-    Specification: Specification;
-    SwaggerProps: SwaggerProps;
+    AnyObject: typeof AnyObject;
+    ServerConfig: typeof ServerConfig;
+    Information: typeof Information;
+    Layout: typeof Layout;
+    Specification: typeof Specification;
+    SwaggerProps: typeof SwaggerProps;
     Server: Server;
 };
 export default _default;

@@ -143,12 +143,12 @@ class Server {
     }
 }
 exports.default = {
-    AnyObject: new AnyObject(),
-    ServerConfig: new ServerConfig(),
-    Information: new Information(),
-    Layout: new Layout(),
-    Specification: new Specification(),
-    SwaggerProps: new SwaggerProps(),
+    AnyObject: AnyObject,
+    ServerConfig: ServerConfig,
+    Information: Information,
+    Layout: Layout,
+    Specification: Specification,
+    SwaggerProps: SwaggerProps,
     Server: new Server(),
 };
 //# sourceMappingURL=index.js.map

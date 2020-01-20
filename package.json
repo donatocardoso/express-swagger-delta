@@ -9,7 +9,7 @@
 	],
 	"author": "Donato Cardoso Ávila",
 	"license": "MIT",
-	"version": "1.0.3",
+	"version": "1.0.4",
 	"main": "./index.js",
 	"repository": {
 		"url": "https://github.com/donatocardoso/express-swagger.git"
@@ -18,7 +18,7 @@
 		"registry": "https://npm.pkg.github.com/"
 	},
 	"scripts": {
-		"tsc": "node_modules/.bin/tsc"
+		"tsc": "node_modules/.bin/tsc -p ./"
 	},
 	"dependencies": {
 		"@types/cli-color": "^2.0.0",

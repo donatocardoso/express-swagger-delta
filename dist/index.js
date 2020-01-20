@@ -145,4 +145,3 @@ exports.default = {
     SwaggerProps: new SwaggerProps(),
     Server: new Server(),
 };
-//# sourceMappingURL=index.js.map

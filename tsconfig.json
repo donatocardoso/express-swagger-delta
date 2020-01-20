@@ -6,16 +6,16 @@
 		"module": "commonjs",
 		"noImplicitAny": true,
 		"outDir": "./dist/",
-		"sourceMap": true,
+		"sourceMap": false,
 		"strict": true,
 		"strictNullChecks": true,
-		"target": "es6"
+		"target": "es6",
 	},
 	"include": [
-		"src/**/*.ts",
-		"@types/**/*.ts"
+		"./src/**/*.ts",
+		"./@types/**/*.ts"
 	],
 	"exclude": [
-		"node_modules/*"
+		"./node_modules/*"
 	]
 }

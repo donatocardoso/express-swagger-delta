@@ -3,11 +3,11 @@ import * as SwaggerUi from 'swagger-ui-express';
 import express, { Express, Router } from 'express';
 
 import {
-  IExpressSwagger,
+  IServer,
   ISwaggerProps,
   ISpecification,
   IInformation,
-  IServer,
+  IServerConfig,
   IAnyObject,
   IBaseRoute
 } from "./interfaces";
@@ -16,7 +16,7 @@ class AnyObject implements IAnyObject {
   [key: string]: object;
 }
 
-class Server implements IServer {
+class ServerConfig implements IServerConfig {
   url: string;
 
   constructor() {
@@ -44,7 +44,7 @@ class Layout implements SwaggerUi.SwaggerUiOptions {
 class Specification implements ISpecification {
   openapi: string;
   info: IInformation;
-  servers: IServer[];
+  servers: IServerConfig[];
   components: IAnyObject;
   paths: IAnyObject;
 
@@ -67,7 +67,7 @@ class SwaggerProps implements ISwaggerProps {
   }
 }
 
-class ExpressSwagger implements IExpressSwagger {
+class Server implements IServer {
   NODE_ENV: string;
   BASE_HOST: string;
   BASE_PATH: string;
@@ -179,10 +179,10 @@ class ExpressSwagger implements IExpressSwagger {
 
 export default {
   AnyObject: new AnyObject(),
-  Server: new Server(),
+  ServerConfig: new ServerConfig(),
   Information: new Information(),
   Layout: new Layout(),
   Specification: new Specification(),
   SwaggerProps: new SwaggerProps(),
-  ExpressSwagger: new ExpressSwagger(),
+  Server: new Server(),
 }

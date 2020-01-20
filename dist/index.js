@@ -15,7 +15,7 @@ const SwaggerUi = __importStar(require("swagger-ui-express"));
 const express_1 = __importDefault(require("express"));
 class AnyObject {
 }
-class Server {
+class ServerConfig {
     constructor() {
         this.url = "";
     }
@@ -45,7 +45,7 @@ class SwaggerProps {
         this.specification = new Specification();
     }
 }
-class ExpressSwagger {
+class Server {
     constructor() {
         this.NODE_ENV = "";
         this.BASE_HOST = "";
@@ -138,11 +138,11 @@ class ExpressSwagger {
 }
 exports.default = {
     AnyObject: new AnyObject(),
-    Server: new Server(),
+    ServerConfig: new ServerConfig(),
     Information: new Information(),
     Layout: new Layout(),
     Specification: new Specification(),
     SwaggerProps: new SwaggerProps(),
-    ExpressSwagger: new ExpressSwagger(),
+    Server: new Server(),
 };
 //# sourceMappingURL=index.js.map

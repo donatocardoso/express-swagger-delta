@@ -12,11 +12,11 @@ import {
   IBaseRoute
 } from "./interfaces";
 
-export class AnyObject implements IAnyObject {
+class AnyObject implements IAnyObject {
   [key: string]: object;
 }
 
-export class Server implements IServer {
+class Server implements IServer {
   url: string;
 
   constructor() {
@@ -24,7 +24,7 @@ export class Server implements IServer {
   }
 }
 
-export class Information implements IInformation {
+class Information implements IInformation {
   name: string;
   title: string;
   version: string;
@@ -38,10 +38,10 @@ export class Information implements IInformation {
   }
 }
 
-export class Layout implements SwaggerUi.SwaggerUiOptions {
+class Layout implements SwaggerUi.SwaggerUiOptions {
 }
 
-export class Specification implements ISpecification {
+class Specification implements ISpecification {
   openapi: string;
   info: IInformation;
   servers: IServer[];
@@ -57,7 +57,7 @@ export class Specification implements ISpecification {
   }
 }
 
-export class SwaggerProps implements ISwaggerProps {
+class SwaggerProps implements ISwaggerProps {
   layout: SwaggerUi.SwaggerUiOptions;
   specification: ISpecification;
 
@@ -67,7 +67,7 @@ export class SwaggerProps implements ISwaggerProps {
   }
 }
 
-export class ExpressSwagger implements IExpressSwagger {
+class ExpressSwagger implements IExpressSwagger {
   NODE_ENV: string;
   BASE_HOST: string;
   BASE_PATH: string;
@@ -175,4 +175,14 @@ export class ExpressSwagger implements IExpressSwagger {
 
     return false;
   }
+}
+
+export default {
+  AnyObject: new AnyObject(),
+  Server: new Server(),
+  Information: new Information(),
+  Layout: new Layout(),
+  Specification: new Specification(),
+  SwaggerProps: new SwaggerProps(),
+  ExpressSwagger: new ExpressSwagger(),
 }

@@ -1,23 +1,23 @@
 import * as SwaggerUi from 'swagger-ui-express';
 import { Express, Router } from 'express';
 import { IExpressSwagger, ISwaggerProps, ISpecification, IInformation, IServer, IAnyObject, IBaseRoute } from "./interfaces";
-export declare class AnyObject implements IAnyObject {
+declare class AnyObject implements IAnyObject {
     [key: string]: object;
 }
-export declare class Server implements IServer {
+declare class Server implements IServer {
     url: string;
     constructor();
 }
-export declare class Information implements IInformation {
+declare class Information implements IInformation {
     name: string;
     title: string;
     version: string;
     description: string;
     constructor();
 }
-export declare class Layout implements SwaggerUi.SwaggerUiOptions {
+declare class Layout implements SwaggerUi.SwaggerUiOptions {
 }
-export declare class Specification implements ISpecification {
+declare class Specification implements ISpecification {
     openapi: string;
     info: IInformation;
     servers: IServer[];
@@ -25,12 +25,12 @@ export declare class Specification implements ISpecification {
     paths: IAnyObject;
     constructor();
 }
-export declare class SwaggerProps implements ISwaggerProps {
+declare class SwaggerProps implements ISwaggerProps {
     layout: SwaggerUi.SwaggerUiOptions;
     specification: ISpecification;
     constructor();
 }
-export declare class ExpressSwagger implements IExpressSwagger {
+declare class ExpressSwagger implements IExpressSwagger {
     NODE_ENV: string;
     BASE_HOST: string;
     BASE_PATH: string;
@@ -44,4 +44,14 @@ export declare class ExpressSwagger implements IExpressSwagger {
     listen(): boolean;
     showMessage(msg: string): boolean;
 }
+declare const _default: {
+    AnyObject: AnyObject;
+    Server: Server;
+    Information: Information;
+    Layout: Layout;
+    Specification: Specification;
+    SwaggerProps: SwaggerProps;
+    ExpressSwagger: ExpressSwagger;
+};
+export default _default;
 //# sourceMappingURL=index.d.ts.map

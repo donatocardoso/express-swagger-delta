@@ -54,6 +54,10 @@ class Server {
         this.serverApp = express_1.default();
         this.serverRouter = express_1.default.Router();
         this.swaggerProps = new SwaggerProps();
+        this.serverRouter.route("/").get((req, res) => res.status(200).json({
+            StatusCode: 200,
+            Message: `${this.swaggerProps.specification.info.name.toUpperCase()}: OK! - process.env.ENVIRONMENT: ${process.env.ENVIRONMENT}`,
+        }));
     }
     addRoute(route, serverMiddleware) {
         if (route.method === 'GET') {

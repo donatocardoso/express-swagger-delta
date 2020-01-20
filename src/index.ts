@@ -85,7 +85,13 @@ class Server implements IServer {
 
     this.serverApp = express();
     this.serverRouter = express.Router();
+
     this.swaggerProps = new SwaggerProps();
+
+    this.serverRouter.route("/").get((req, res) => res.status(200).json({
+      StatusCode: 200, 
+      Message: `${this.swaggerProps.specification.info.name.toUpperCase()}: OK! - process.env.ENVIRONMENT: ${process.env.ENVIRONMENT}`,
+    }));
   }
 
   addRoute(route: IBaseRoute, serverMiddleware: (req: any, res: any, callback: Function) => Function): void {

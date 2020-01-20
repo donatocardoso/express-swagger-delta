@@ -57,7 +57,9 @@ export interface IServer
   serverRouter: Router;
   swaggerProps: ISwaggerProps;
 
-  addRoute(route: IBaseRoute, serverMiddleware: (req: any, res: any, callback: Function) => Function): void;
+  serverMiddleware: (req: any, res: any, callback: Function) => Function;
+  
+  addRoute(route: IBaseRoute): void;
   setSwaggerProps(props: ISwaggerProps): void;
   listen(): void;
 }

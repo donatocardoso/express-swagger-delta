@@ -53,13 +53,15 @@ class Server {
         this.PORT = 0;
         this.serverApp = express_1.default();
         this.serverRouter = express_1.default.Router();
+        this.serverMiddleware = () => function () { };
         this.swaggerProps = new SwaggerProps();
         this.serverRouter.route("/").get((req, res) => res.status(200).json({
             StatusCode: 200,
             Message: `${this.swaggerProps.specification.info.name.toUpperCase()}: OK! - process.env.NODE_ENV: ${this.NODE_ENV}`,
         }));
     }
-    addRoute(route, serverMiddleware) {
+    addRoute(route) {
+        const serverMiddleware = this.serverMiddleware;
         if (route.method === 'GET') {
             this.serverRouter.route(route.path).get(function (req, res) {
                 serverMiddleware(req, res, route.handler);

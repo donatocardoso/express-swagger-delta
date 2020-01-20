@@ -38,8 +38,9 @@ declare class Server implements IServer {
     serverApp: Express;
     serverRouter: Router;
     swaggerProps: ISwaggerProps;
+    serverMiddleware: (req: any, res: any, callback: Function) => Function;
     constructor();
-    addRoute(route: IBaseRoute, serverMiddleware: (req: any, res: any, callback: Function) => Function): void;
+    addRoute(route: IBaseRoute): void;
     setSwaggerProps(props: ISwaggerProps): void;
     listen(): boolean;
     showMessage(msg: string): boolean;

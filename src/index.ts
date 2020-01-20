@@ -76,6 +76,8 @@ class Server implements IServer {
   serverApp: Express;
   serverRouter: Router;
   swaggerProps: ISwaggerProps;
+  
+  serverMiddleware: (req: any, res: any, callback: Function) => Function;
 
   constructor() {
     this.NODE_ENV = "";
@@ -85,6 +87,7 @@ class Server implements IServer {
 
     this.serverApp = express();
     this.serverRouter = express.Router();
+    this.serverMiddleware = () => function() {};
 
     this.swaggerProps = new SwaggerProps();
 
@@ -94,7 +97,9 @@ class Server implements IServer {
     }));
   }
 
-  addRoute(route: IBaseRoute, serverMiddleware: (req: any, res: any, callback: Function) => Function): void {
+  addRoute(route: IBaseRoute): void {
+    const serverMiddleware = this.serverMiddleware;
+    
     if (route.method === 'GET') {
       this.serverRouter.route(route.path).get(function (req, res) {
         serverMiddleware(req, res, route.handler);

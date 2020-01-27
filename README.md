@@ -27,7 +27,7 @@ To start using the library, it is necessary to create a base configuration file,
 
 **Note:** Follows the same structure pattern as the [swagger.js documentation](https://swagger.io/docs/specification/basic-structure/) (openapi: 3.0.0).
 
-```js
+```js {.new-tab-size}
 export const layout = {
 	explorer: false,
 	customfavIcon: 'string',
@@ -85,7 +85,7 @@ export const specification = {
 
 That done, you need to configure the server, which can be done as follows:
 
-```js
+```js {.new-tab-size}
 import cors from 'cors';
 import dotenv from 'dotenv';
 import bodyParser from 'body-parser';
@@ -154,7 +154,7 @@ To add a route to the server it is necessary to create a file for building route
 
 **Nota:** O objeto de parâmetro segue o mesmo padrão de estrutura que a [documentação do swagger.js](https://swagger.io/docs/specification/describing-parameters/) (openapi: 3.0.0).
 
-```js
+```js {.new-tab-size}
 import Return from './Return';
 import ExpressSwagger from 'express-swagger-delta';
 

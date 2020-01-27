@@ -1,4 +1,4 @@
-<link rel="stylesheet" type="text/css" href="./main.css" />
+<link href="main.css" rel="stylesheet"></link>
 
 # express-swagger-delta
 

@@ -2,8 +2,8 @@
 
 Fast, unopinionated, minimalist web framework for [node](http://nodejs.org).
 
-	[![NPM Version][npm-image]][npm-url]
-	[![NPM Downloads][downloads-image]][downloads-url]
+[![NPM Version][npm-image]][npm-url]
+[![NPM Downloads][downloads-image]][downloads-url]
 
 ## Installation
 

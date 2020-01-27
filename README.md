@@ -1,3 +1,11 @@
+<style>
+	pre {
+		tab-size: 2;
+		-o-tab-size: 2;
+		-moz-tab-size: 2;
+	}
+</style>
+
 # express-swagger-delta
 
 Fast, unopinionated, minimalist web framework for [node](http://nodejs.org).
@@ -150,7 +158,7 @@ export default new Server();
 
 To add a route to the server it is necessary to create a file for building routes by calling an option from the ExpressSwagger property and thus passing its parameters, that way the API documentation and route will already be created, see:
 
-**Nota:** O objeto de parâmetro segue o mesmo padrão de estrutura que a [documentação do swagger.js] (https://swagger.io/docs/specification/describing-parameters/) (openapi: 3.0.0).
+**Nota:** O objeto de parâmetro segue o mesmo padrão de estrutura que a [documentação do swagger.js](https://swagger.io/docs/specification/describing-parameters/) (openapi: 3.0.0).
 
 ```js
 import Return from './Return';

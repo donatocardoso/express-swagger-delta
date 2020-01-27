@@ -2,8 +2,8 @@
 
 Fast, unopinionated, minimalist web framework for [node](http://nodejs.org).
 
-  [![NPM Version][npm-image]][npm-url]
-  [![NPM Downloads][downloads-image]][downloads-url]
+	[![NPM Version][npm-image]][npm-url]
+	[![NPM Downloads][downloads-image]][downloads-url]
 
 ## Installation
 
@@ -27,57 +27,57 @@ To start using the library, it is necessary to create a base configuration file,
 
 ```js
 export const layout = {
-  explorer: false,
-  customfavIcon: 'string',
-  customCss: 'string',
-  customSiteTitle: 'string'
+	explorer: false,
+	customfavIcon: 'string',
+	customCss: 'string',
+	customSiteTitle: 'string'
 };
 
 export const specification = {
-  info: {
-    name: 'string',
-    version: 'string',
-    description: 'string',
-    title: 'string',
-  },
-  servers: [
-    {
-      url: 'string',
-    }
-  ],
-  components: {
-    securitySchemes: {
-      name: {
-        type: 'string',
-        name: 'string',
-        in: 'string',
-      },
-    },
-    schemas: {
-      name: {
-        type: 'string',
-        properties: {
-          name: {
-            type: 'string',
-            format: 'string',
-            description: 'string',
-          },
-        }
-      }
-    },
-    responses: {
-      default: {
-        description: 'string',
-        content: {
-          'application/json': {
-            schema: {
-              $ref: 'string',
-            }
-          }
-        }
-      }
-    }
-  }
+	info: {
+		name: 'string',
+		version: 'string',
+		description: 'string',
+		title: 'string',
+	},
+	servers: [
+		{
+			url: 'string',
+		}
+	],
+	components: {
+		securitySchemes: {
+			name: {
+				type: 'string',
+				name: 'string',
+				in: 'string',
+			},
+		},
+		schemas: {
+			name: {
+				type: 'string',
+				properties: {
+					name: {
+						type: 'string',
+						format: 'string',
+						description: 'string',
+					},
+				}
+			}
+		},
+		responses: {
+			default: {
+				description: 'string',
+				content: {
+					'application/json': {
+						schema: {
+							$ref: 'string',
+						}
+					}
+				}
+			}
+		}
+	}
 };
 ```
 
@@ -181,15 +181,15 @@ class User
 			{		
 				return await UserService.get();
 			}
-    });
-  }
+		});
+	}
 }
 
 export default new User();
 ```
 ## License
 
-  [MIT](LICENSE)
+	[MIT](LICENSE)
 
 [npm-image]: https://img.shields.io/npm/v/express-swagger-delta.svg
 [npm-url]: https://npmjs.org/package/express-swagger-delta

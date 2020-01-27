@@ -1,10 +1,4 @@
-<style>
-	pre {
-		tab-size: 2;
-		-o-tab-size: 2;
-		-moz-tab-size: 2;
-	}
-</style>
+<link rel="stylesheet" type="text/css" href="./main.css" />
 
 # express-swagger-delta
 
@@ -197,7 +191,7 @@ export default new User();
 ```
 ## License
 
-	[MIT](LICENSE)
+[MIT](LICENSE)
 
 [npm-image]: https://img.shields.io/npm/v/express-swagger-delta.svg
 [npm-url]: https://npmjs.org/package/express-swagger-delta

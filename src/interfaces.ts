@@ -53,11 +53,11 @@ export interface IServer
   BASE_PATH: string;
   PORT: number;
   
-  serverApp: Express;
-  serverRouter: Router;
+  app: Express;
+  router: Router;
   swaggerProps: ISwaggerProps;
 
-  serverMiddleware: (req: any, res: any, callback: Function) => Function;
+  middleware: (req: any, res: any, callback: Function) => Function;
   
   addRoute(route: IBaseRoute): void;
   setSwaggerProps(props: ISwaggerProps): void;

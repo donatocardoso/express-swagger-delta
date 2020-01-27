@@ -51,34 +51,34 @@ class Server {
         this.BASE_HOST = "";
         this.BASE_PATH = "";
         this.PORT = 0;
-        this.serverApp = express_1.default();
-        this.serverRouter = express_1.default.Router();
-        this.serverMiddleware = () => function () { };
+        this.app = express_1.default();
+        this.router = express_1.default.Router();
+        this.middleware = () => function () { };
         this.swaggerProps = new SwaggerProps();
-        this.serverRouter.route("/").get((req, res) => res.status(200).json({
+        this.router.route("/").get((req, res) => res.status(200).json({
             StatusCode: 200,
             Message: `${this.swaggerProps.specification.info.name.toUpperCase()}: OK! - process.env.NODE_ENV: ${this.NODE_ENV}`,
         }));
     }
     addRoute(route) {
-        const serverMiddleware = this.serverMiddleware;
+        const serverMiddleware = this.middleware;
         if (route.method === 'GET') {
-            this.serverRouter.route(route.path).get(function (req, res) {
+            this.router.route(route.path).get(function (req, res) {
                 serverMiddleware(req, res, route.handler);
             });
         }
         else if (route.method === 'POST') {
-            this.serverRouter.route(route.path).post(function (req, res) {
+            this.router.route(route.path).post(function (req, res) {
                 serverMiddleware(req, res, route.handler);
             });
         }
         else if (route.method === 'PUT') {
-            this.serverRouter.route(route.path).put(function (req, res) {
+            this.router.route(route.path).put(function (req, res) {
                 serverMiddleware(req, res, route.handler);
             });
         }
         else if (route.method === 'DELETE') {
-            this.serverRouter.route(route.path).delete(function (req, res) {
+            this.router.route(route.path).delete(function (req, res) {
                 serverMiddleware(req, res, route.handler);
             });
         }
@@ -109,17 +109,17 @@ class Server {
     }
     listen() {
         if (!this.NODE_ENV)
-            return this.showMessage('A propriedade "NODE_ENV" não foi inicializada');
+            return this._showMessage('A propriedade "NODE_ENV" não foi inicializada');
         if (!this.BASE_HOST)
-            return this.showMessage('A propriedade "BASE_HOST" não foi inicializada');
+            return this._showMessage('A propriedade "BASE_HOST" não foi inicializada');
         if (!this.BASE_PATH)
-            return this.showMessage('A propriedade "BASE_PATH" não foi inicializada');
+            return this._showMessage('A propriedade "BASE_PATH" não foi inicializada');
         if (!this.PORT)
-            return this.showMessage('A propriedade "PORT" não foi inicializada');
+            return this._showMessage('A propriedade "PORT" não foi inicializada');
         const routeDocs = this.BASE_PATH + '/docs';
         const swaggerSetup = SwaggerUi.setup(this.swaggerProps.specification, this.swaggerProps.layout);
-        this.serverApp
-            .use(this.BASE_PATH, this.serverRouter)
+        this.app
+            .use(this.BASE_PATH, this.router)
             .use(routeDocs, SwaggerUi.serve, swaggerSetup)
             .listen(this.PORT, () => {
             var _name = `\n ${this.swaggerProps.specification.info.name.toUpperCase()} `;
@@ -133,7 +133,7 @@ class Server {
         });
         return true;
     }
-    showMessage(msg) {
+    _showMessage(msg) {
         console.log('');
         console.log('ExpressSwagger.Server diz: ');
         console.log('');

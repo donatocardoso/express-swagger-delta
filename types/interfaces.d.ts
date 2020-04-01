@@ -36,7 +36,7 @@ export interface ISwaggerProps {
 export interface IServer {
     NODE_ENV: string;
     BASE_HOST: string;
-    BASE_PATH: string;
+    BASE_PATH: string | "";
     PORT: number;
     app: Express;
     router: Router;

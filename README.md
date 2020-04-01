@@ -23,7 +23,7 @@ $ npm install express-swagger-delta
 
 ## Usage
 
-To start using the library, it is necessary to create a base configuration file, following the following structure:
+To start using the library, it is necessary to create a base configuration file, following the structure:
 
 **Note:** Follows the same structure pattern as the [swagger.js documentation](https://swagger.io/docs/specification/basic-structure/) (openapi: 3.0.0).
 
@@ -152,7 +152,7 @@ export default new Server();
 
 To add a route to the server it is necessary to create a file for building routes by calling an option from the ExpressSwagger property and thus passing its parameters, that way the API documentation and route will already be created, see:
 
-**Nota:** O objeto de parâmetro segue o mesmo padrão de estrutura que a [documentação do swagger.js](https://swagger.io/docs/specification/describing-parameters/) (openapi: 3.0.0).
+**Note:** The parameter object follows the same structure pattern as [swagger.js documentation](https://swagger.io/docs/specification/describing-parameters/) (openapi: 3.0.0).
 
 ```js
 import Return from './Return';

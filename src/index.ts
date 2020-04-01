@@ -150,8 +150,7 @@ class Server implements IServer {
 
   listen(): boolean {
     if (!this.NODE_ENV) return this._showMessage('A propriedade "NODE_ENV" não foi inicializada');
-    if (!this.BASE_HOST) return this._showMessage('A propriedade "BASE_HOST" não foi inicializada');
-    if (!this.BASE_PATH) return this._showMessage('A propriedade "BASE_PATH" não foi inicializada');
+    if (!this.BASE_HOST) return this._showMessage('A propriedade "BASE_HOST" não foi inicializada');    
     if (!this.PORT) return this._showMessage('A propriedade "PORT" não foi inicializada');
 
     const routeDocs = this.BASE_PATH + '/docs';

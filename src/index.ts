@@ -1,6 +1,6 @@
-import color from 'cli-color';
-import * as SwaggerUi from 'swagger-ui-express';
-import express, { Express, Router } from 'express';
+import color from "cli-color";
+import * as SwaggerUi from "swagger-ui-express";
+import express, { Express, Router } from "express";
 
 import {
   IServer,
@@ -9,7 +9,7 @@ import {
   IInformation,
   IServerConfig,
   IAnyObject,
-  IBaseRoute
+  IBaseRoute,
 } from "./interfaces";
 
 class AnyObject implements IAnyObject {
@@ -38,8 +38,7 @@ class Information implements IInformation {
   }
 }
 
-class Layout implements SwaggerUi.SwaggerUiOptions {
-}
+class Layout implements SwaggerUi.SwaggerUiOptions {}
 
 class Specification implements ISpecification {
   openapi: string;
@@ -87,58 +86,67 @@ class Server implements IServer {
 
     this.app = express();
     this.router = express.Router();
-    this.middleware = () => function() {};
+    this.middleware = () => function () {};
 
     this.swaggerProps = new SwaggerProps();
 
-    this.router.route("/").get((req, res) => res.status(200).json({
-      StatusCode: 200, 
-      Message: `${this.swaggerProps.specification.info.name.toUpperCase()}: OK! - process.env.NODE_ENV: ${this.NODE_ENV}`,
-    }));
+    this.router.route("/").get((req, res) =>
+      res.status(200).json({
+        StatusCode: 200,
+        Message: `${this.swaggerProps.specification.info.name.toUpperCase()}: OK! - process.env.NODE_ENV: ${
+          this.NODE_ENV
+        }`,
+      })
+    );
   }
 
   addRoute(route: IBaseRoute): void {
     const serverMiddleware = this.middleware;
-    
-    if (route.method === 'GET') {
+
+    if (route.method === "GET") {
       this.router.route(route.path).get(function (req, res) {
         serverMiddleware(req, res, route.handler);
       });
-    }
-    else if (route.method === 'POST') {
+    } else if (route.method === "POST") {
       this.router.route(route.path).post(function (req, res) {
         serverMiddleware(req, res, route.handler);
       });
-    }
-    else if (route.method === 'PUT') {
+    } else if (route.method === "PUT") {
       this.router.route(route.path).put(function (req, res) {
         serverMiddleware(req, res, route.handler);
       });
-    }
-    else if (route.method === 'DELETE') {
+    } else if (route.method === "DELETE") {
       this.router.route(route.path).delete(function (req, res) {
         serverMiddleware(req, res, route.handler);
       });
     }
 
-    if (this.swaggerProps.specification.paths[route.path.toString()]) {
-      Object.assign(this.swaggerProps.specification.paths[route.path.toString()], {
-        [route.method.toLowerCase()]: {
-          tags: route.tags,
-          summary: route.summary,
-          parameters: route.parameters,
-          responses: route.responses
-        }
+    let routeConfig = {
+      tags: route.tags,
+      summary: route.summary,
+      responses: route.responses,
+    };
+
+    if (route.parameters)
+      Object.assign(routeConfig, {
+        parameters: route.parameters,
       });
-    }
-    else {
-      this.swaggerProps.specification.paths[route.path.toString()] = {
-        [route.method.toLowerCase()]: {
-          tags: route.tags,
-          summary: route.summary,
-          parameters: route.parameters,
-          responses: route.responses
+
+    if (route.requestBody)
+      Object.assign(routeConfig, {
+        requestBody: route.requestBody,
+      });
+
+    if (this.swaggerProps.specification.paths[route.path.toString()]) {
+      Object.assign(
+        this.swaggerProps.specification.paths[route.path.toString()],
+        {
+          [route.method.toLowerCase()]: routeConfig,
         }
+      );
+    } else {
+      this.swaggerProps.specification.paths[route.path.toString()] = {
+        [route.method.toLowerCase()]: routeConfig,
       };
     }
   }
@@ -149,12 +157,20 @@ class Server implements IServer {
   }
 
   listen(): boolean {
-    if (!this.NODE_ENV) return this._showMessage('A propriedade "NODE_ENV" não foi inicializada');
-    if (!this.BASE_HOST) return this._showMessage('A propriedade "BASE_HOST" não foi inicializada');    
-    if (!this.PORT) return this._showMessage('A propriedade "PORT" não foi inicializada');
+    if (!this.NODE_ENV)
+      return this._showMessage('A propriedade "NODE_ENV" não foi inicializada');
+    if (!this.BASE_HOST)
+      return this._showMessage(
+        'A propriedade "BASE_HOST" não foi inicializada'
+      );
+    if (!this.PORT)
+      return this._showMessage('A propriedade "PORT" não foi inicializada');
 
-    const routeDocs = this.BASE_PATH + '/docs';
-    const swaggerSetup = SwaggerUi.setup(this.swaggerProps.specification, this.swaggerProps.layout);
+    const routeDocs = this.BASE_PATH + "/docs";
+    const swaggerSetup = SwaggerUi.setup(
+      this.swaggerProps.specification,
+      this.swaggerProps.layout
+    );
 
     this.app
       .use(this.BASE_PATH, this.router)
@@ -169,19 +185,23 @@ class Server implements IServer {
 
         var message = `\n${_name} ${_description} ${_environment} ${_baseRoute} ${_docsRoute}`;
 
-        console.log(color.bgWhite(color.black(message.replace(/([^\s][^\n]{1,75})/g, '$1 \n'))));
-        console.log('');
+        console.log(
+          color.bgWhite(
+            color.black(message.replace(/([^\s][^\n]{1,75})/g, "$1 \n"))
+          )
+        );
+        console.log("");
       });
 
-      return true;
+    return true;
   }
 
   _showMessage(msg: string): boolean {
-    console.log('');
-    console.log('ExpressSwagger.Server diz: ');
-    console.log('');
+    console.log("");
+    console.log("ExpressSwagger.Server diz: ");
+    console.log("");
     console.log(msg);
-    console.log('');
+    console.log("");
 
     return false;
   }
@@ -195,4 +215,4 @@ export default {
   Specification: Specification,
   SwaggerProps: SwaggerProps,
   Server: new Server(),
-}
+};

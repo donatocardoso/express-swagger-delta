@@ -62,44 +62,47 @@ class Server {
     }
     addRoute(route) {
         const serverMiddleware = this.middleware;
-        if (route.method === 'GET') {
+        if (route.method === "GET") {
             this.router.route(route.path).get(function (req, res) {
                 serverMiddleware(req, res, route.handler);
             });
         }
-        else if (route.method === 'POST') {
+        else if (route.method === "POST") {
             this.router.route(route.path).post(function (req, res) {
                 serverMiddleware(req, res, route.handler);
             });
         }
-        else if (route.method === 'PUT') {
+        else if (route.method === "PUT") {
             this.router.route(route.path).put(function (req, res) {
                 serverMiddleware(req, res, route.handler);
             });
         }
-        else if (route.method === 'DELETE') {
+        else if (route.method === "DELETE") {
             this.router.route(route.path).delete(function (req, res) {
                 serverMiddleware(req, res, route.handler);
             });
         }
+        let routeConfig = {
+            tags: route.tags,
+            summary: route.summary,
+            responses: route.responses,
+        };
+        if (route.parameters)
+            Object.assign(routeConfig, {
+                parameters: route.parameters,
+            });
+        if (route.requestBody)
+            Object.assign(routeConfig, {
+                requestBody: route.requestBody,
+            });
         if (this.swaggerProps.specification.paths[route.path.toString()]) {
             Object.assign(this.swaggerProps.specification.paths[route.path.toString()], {
-                [route.method.toLowerCase()]: {
-                    tags: route.tags,
-                    summary: route.summary,
-                    parameters: route.parameters,
-                    responses: route.responses
-                }
+                [route.method.toLowerCase()]: routeConfig,
             });
         }
         else {
             this.swaggerProps.specification.paths[route.path.toString()] = {
-                [route.method.toLowerCase()]: {
-                    tags: route.tags,
-                    summary: route.summary,
-                    parameters: route.parameters,
-                    responses: route.responses
-                }
+                [route.method.toLowerCase()]: routeConfig,
             };
         }
     }
@@ -114,7 +117,7 @@ class Server {
             return this._showMessage('A propriedade "BASE_HOST" não foi inicializada');
         if (!this.PORT)
             return this._showMessage('A propriedade "PORT" não foi inicializada');
-        const routeDocs = this.BASE_PATH + '/docs';
+        const routeDocs = this.BASE_PATH + "/docs";
         const swaggerSetup = SwaggerUi.setup(this.swaggerProps.specification, this.swaggerProps.layout);
         this.app
             .use(this.BASE_PATH, this.router)
@@ -126,17 +129,17 @@ class Server {
             var _baseRoute = `\n Base Route: http://${this.BASE_HOST}:${this.PORT}${this.BASE_PATH} `;
             var _docsRoute = `\n Docs Route: http://${this.BASE_HOST}:${this.PORT}${this.BASE_PATH}/docs `;
             var message = `\n${_name} ${_description} ${_environment} ${_baseRoute} ${_docsRoute}`;
-            console.log(cli_color_1.default.bgWhite(cli_color_1.default.black(message.replace(/([^\s][^\n]{1,75})/g, '$1 \n'))));
-            console.log('');
+            console.log(cli_color_1.default.bgWhite(cli_color_1.default.black(message.replace(/([^\s][^\n]{1,75})/g, "$1 \n"))));
+            console.log("");
         });
         return true;
     }
     _showMessage(msg) {
-        console.log('');
-        console.log('ExpressSwagger.Server diz: ');
-        console.log('');
+        console.log("");
+        console.log("ExpressSwagger.Server diz: ");
+        console.log("");
         console.log(msg);
-        console.log('');
+        console.log("");
         return false;
     }
 }

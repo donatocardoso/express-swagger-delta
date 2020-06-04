@@ -2,11 +2,12 @@ import { Express, Router } from 'express';
 import { SwaggerUiOptions } from 'swagger-ui-express';
 import { PathParams } from 'express-serve-static-core';
 export interface IBaseRoute {
-    method: string | 'GET' | 'POST' | 'PUT' | 'DELETE';
+    method: string | "GET" | "POST" | "PUT" | "DELETE";
     path: PathParams;
     tags: Array<string>;
     summary: string;
-    parameters: object;
+    parameters: object | null;
+    requestBody: object | null;
     responses: object;
     handler: Function;
 }

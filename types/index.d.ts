@@ -1,5 +1,5 @@
-import * as SwaggerUi from 'swagger-ui-express';
-import { Express, Router } from 'express';
+import * as SwaggerUi from "swagger-ui-express";
+import { Express, Router } from "express";
 import { IServer, ISwaggerProps, ISpecification, IInformation, IServerConfig, IAnyObject, IBaseRoute } from "./interfaces";
 declare class AnyObject implements IAnyObject {
     [key: string]: object;

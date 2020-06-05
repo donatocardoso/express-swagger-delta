@@ -17,9 +17,9 @@ class FormatRoute implements IFormatRoute {
   express: string;
   swagger: string;
 
-  constructor() {
-    this.express = "";
-    this.swagger = "";
+  constructor(route: string) {
+    this.express = route;
+    this.swagger = route;
   }
 }
 
@@ -212,7 +212,7 @@ class Server implements IServer {
   _formatRoute(route: string): IFormatRoute {
     let pathKeys = route.split("/");
 
-    let formatRoute = new FormatRoute();
+    let formatRoute = new FormatRoute(route);
 
     if (route.includes(":")) {
       formatRoute.express = route;

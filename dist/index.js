@@ -14,9 +14,9 @@ const cli_color_1 = __importDefault(require("cli-color"));
 const SwaggerUi = __importStar(require("swagger-ui-express"));
 const express_1 = __importDefault(require("express"));
 class FormatRoute {
-    constructor() {
-        this.express = "";
-        this.swagger = "";
+    constructor(route) {
+        this.express = route;
+        this.swagger = route;
     }
 }
 class AnyObject {
@@ -143,7 +143,7 @@ class Server {
     }
     _formatRoute(route) {
         let pathKeys = route.split("/");
-        let formatRoute = new FormatRoute();
+        let formatRoute = new FormatRoute(route);
         if (route.includes(":")) {
             formatRoute.express = route;
             for (let i = 0; i < pathKeys.length; i++) {

@@ -10,7 +10,7 @@
   ],
   "author": "Donato Cardoso Ávila",
   "license": "MIT",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "main": "./dist/index.js",
   "types": "types",
   "repository": {

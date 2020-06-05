@@ -1,6 +1,6 @@
-import { Express, Router } from 'express';
-import { SwaggerUiOptions } from 'swagger-ui-express';
-import { PathParams } from 'express-serve-static-core';
+import { Express, Router } from "express";
+import { SwaggerUiOptions } from "swagger-ui-express";
+import { PathParams } from "express-serve-static-core";
 
 export interface IBaseRoute {
   method: string | "GET" | "POST" | "PUT" | "DELETE";
@@ -13,52 +13,51 @@ export interface IBaseRoute {
   handler: Function;
 }
 
-export interface IInformation
-{
-  name: string,
-  title: string,
-  version: string,
-  description: string
+export interface IFormatRoute {
+  express: string;
+  swagger: string;
 }
 
-export interface IServerConfig
-{
-  url: string
+export interface IInformation {
+  name: string;
+  title: string;
+  version: string;
+  description: string;
 }
 
-export interface IAnyObject
-{
+export interface IServerConfig {
+  url: string;
+}
+
+export interface IAnyObject {
   [key: string]: object;
 }
 
-export interface ISpecification
-{
-  openapi: string,
-  info: IInformation,
-  servers: Array<IServerConfig>
-  components: IAnyObject,
-  paths: IAnyObject
+export interface ISpecification {
+  openapi: string;
+  info: IInformation;
+  servers: Array<IServerConfig>;
+  components: IAnyObject;
+  paths: IAnyObject;
 }
 
-export interface ISwaggerProps
-{
-  layout: SwaggerUiOptions,
-  specification: ISpecification
+export interface ISwaggerProps {
+  layout: SwaggerUiOptions;
+  specification: ISpecification;
 }
 
-export interface IServer
-{
+export interface IServer {
   NODE_ENV: string;
   BASE_HOST: string;
   BASE_PATH: string | "";
   PORT: number;
-  
+
   app: Express;
   router: Router;
   swaggerProps: ISwaggerProps;
 
   middleware: (req: any, res: any, callback: Function) => Function;
-  
+
   addRoute(route: IBaseRoute): void;
   setSwaggerProps(props: ISwaggerProps): void;
   listen(): void;

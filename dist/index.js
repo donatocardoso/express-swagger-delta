@@ -13,6 +13,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const cli_color_1 = __importDefault(require("cli-color"));
 const SwaggerUi = __importStar(require("swagger-ui-express"));
 const express_1 = __importDefault(require("express"));
+class FormatRoute {
+    constructor() {
+        this.express = "";
+        this.swagger = "";
+    }
+}
 class AnyObject {
 }
 class ServerConfig {
@@ -62,23 +68,24 @@ class Server {
     }
     addRoute(route) {
         const serverMiddleware = this.middleware;
+        const formatedRoute = this._formatRoute(route.path.toString());
         if (route.method === "GET") {
-            this.router.route(route.path).get(function (req, res) {
+            this.router.route(formatedRoute.express).get(function (req, res) {
                 serverMiddleware(req, res, route.handler);
             });
         }
         else if (route.method === "POST") {
-            this.router.route(route.path).post(function (req, res) {
+            this.router.route(formatedRoute.express).post(function (req, res) {
                 serverMiddleware(req, res, route.handler);
             });
         }
         else if (route.method === "PUT") {
-            this.router.route(route.path).put(function (req, res) {
+            this.router.route(formatedRoute.express).put(function (req, res) {
                 serverMiddleware(req, res, route.handler);
             });
         }
         else if (route.method === "DELETE") {
-            this.router.route(route.path).delete(function (req, res) {
+            this.router.route(formatedRoute.express).delete(function (req, res) {
                 serverMiddleware(req, res, route.handler);
             });
         }
@@ -95,13 +102,13 @@ class Server {
             Object.assign(routeConfig, {
                 requestBody: route.requestBody,
             });
-        if (this.swaggerProps.specification.paths[route.path.toString()]) {
-            Object.assign(this.swaggerProps.specification.paths[route.path.toString()], {
+        if (this.swaggerProps.specification.paths[formatedRoute.swagger]) {
+            Object.assign(this.swaggerProps.specification.paths[formatedRoute.swagger], {
                 [route.method.toLowerCase()]: routeConfig,
             });
         }
         else {
-            this.swaggerProps.specification.paths[route.path.toString()] = {
+            this.swaggerProps.specification.paths[formatedRoute.swagger] = {
                 [route.method.toLowerCase()]: routeConfig,
             };
         }
@@ -133,6 +140,26 @@ class Server {
             console.log("");
         });
         return true;
+    }
+    _formatRoute(route) {
+        let pathKeys = route.split("/");
+        let formatRoute = new FormatRoute();
+        if (route.includes(":")) {
+            formatRoute.express = route;
+            for (let i = 0; i < pathKeys.length; i++) {
+                if (pathKeys[i].includes(":"))
+                    pathKeys[i] = pathKeys[i].replace(":", "{") + "}";
+            }
+            formatRoute.swagger = pathKeys.join("/");
+        }
+        else if (route.includes("{") && route.includes("}")) {
+            formatRoute.swagger = route;
+            for (let i = 0; i < pathKeys.length; i++) {
+                pathKeys[i] = pathKeys[i].replace("{", ":").replace("}", "");
+            }
+            formatRoute.express = pathKeys.join("/");
+        }
+        return formatRoute;
     }
     _showMessage(msg) {
         console.log("");

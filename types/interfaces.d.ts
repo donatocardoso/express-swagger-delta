@@ -1,6 +1,6 @@
-import { Express, Router } from 'express';
-import { SwaggerUiOptions } from 'swagger-ui-express';
-import { PathParams } from 'express-serve-static-core';
+import { Express, Router } from "express";
+import { SwaggerUiOptions } from "swagger-ui-express";
+import { PathParams } from "express-serve-static-core";
 export interface IBaseRoute {
     method: string | "GET" | "POST" | "PUT" | "DELETE";
     path: PathParams;
@@ -10,6 +10,10 @@ export interface IBaseRoute {
     requestBody: object | null;
     responses: object;
     handler: Function;
+}
+export interface IFormatRoute {
+    express: string;
+    swagger: string;
 }
 export interface IInformation {
     name: string;

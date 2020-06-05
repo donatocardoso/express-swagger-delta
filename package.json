@@ -8,14 +8,14 @@
     "express",
     "swagger"
   ],
-  "author": "Donato Cardoso",
+  "author": "Donato Cardoso Ávila",
   "license": "MIT",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "main": "./dist/index.js",
   "types": "types",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/donatocardoso/express-swagger.git"
+    "url": "git+https://github.com/donatocardoso/express-swagger-delta.git"
   },
   "scripts": {
     "tsc": "tsc -p ./"
@@ -36,6 +36,6 @@
     "typescript": "^2.9.2"
   },
   "bugs": {
-    "url": "https://github.com/donatocardoso/express-swagger/issues"
+    "url": "https://github.com/donatocardoso/express-swagger-delta/issues"
   }
 }

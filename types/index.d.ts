@@ -1,6 +1,6 @@
 import * as SwaggerUi from "swagger-ui-express";
 import { Express, Router } from "express";
-import { IServer, ISwaggerProps, ISpecification, IInformation, IServerConfig, IAnyObject, IBaseRoute } from "./interfaces";
+import { IServer, ISwaggerProps, ISpecification, IInformation, IServerConfig, IAnyObject, IBaseRoute, IFormatRoute } from "./interfaces";
 declare class AnyObject implements IAnyObject {
     [key: string]: object;
 }
@@ -43,6 +43,7 @@ declare class Server implements IServer {
     addRoute(route: IBaseRoute): void;
     setSwaggerProps(props: ISwaggerProps): void;
     listen(): boolean;
+    _formatRoute(route: string): IFormatRoute;
     _showMessage(msg: string): boolean;
 }
 declare const _default: {

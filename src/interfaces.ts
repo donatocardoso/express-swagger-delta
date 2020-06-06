@@ -7,6 +7,7 @@ export interface IBaseRoute {
   path: PathParams;
   tags: Array<string>;
   summary: string;
+  security: Array<object>;
   parameters: object | null;
   requestBody: object | null;
   responses: object;

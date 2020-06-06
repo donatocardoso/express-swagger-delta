@@ -94,6 +94,10 @@ class Server {
             summary: route.summary,
             responses: route.responses,
         };
+        if (route.security)
+            Object.assign(routeConfig, {
+                security: route.security,
+            });
         if (route.parameters)
             Object.assign(routeConfig, {
                 parameters: route.parameters,

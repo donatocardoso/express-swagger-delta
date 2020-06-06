@@ -140,6 +140,11 @@ class Server implements IServer {
       responses: route.responses,
     };
 
+    if (route.security)
+      Object.assign(routeConfig, {
+        security: route.security,
+      });
+
     if (route.parameters)
       Object.assign(routeConfig, {
         parameters: route.parameters,

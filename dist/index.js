@@ -59,7 +59,7 @@ class Server {
         this.PORT = 0;
         this.app = express_1.default();
         this.router = express_1.default.Router();
-        this.middleware = () => function () { };
+        this.middleware = (req, res, callback) => callback(req, res);
         this.swaggerProps = new SwaggerProps();
         this.router.route("/").get((req, res) => res.status(200).json({
             StatusCode: 200,

@@ -97,7 +97,7 @@ class Server implements IServer {
 
     this.app = express();
     this.router = express.Router();
-    this.middleware = () => function () {};
+    this.middleware = (req, res, callback) => callback(req, res);
 
     this.swaggerProps = new SwaggerProps();
 

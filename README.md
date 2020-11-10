@@ -1,13 +1,13 @@
 <link href="main.css" rel="stylesheet"></link>
 
-# express-swagger-delta
+# ✅ express-swagger-delta
 
 Fast, unopinionated, minimalist web framework for [node](http://nodejs.org).
 
 [![NPM Version][npm-image]][npm-url]
 [![NPM Downloads][downloads-image]][downloads-url]
 
-## Installation
+## 🔹 Installation
 
 This is a [Node.js](https://nodejs.org/en/) module available through the
 [npm registry](https://www.npmjs.com/).
@@ -21,7 +21,7 @@ Installation is done using the
 $ npm install express-swagger-delta
 ```
 
-## Usage
+## 🔹 Usage
 
 To start using the library, it is necessary to create a base configuration file, following the structure:
 
@@ -30,79 +30,77 @@ To start using the library, it is necessary to create a base configuration file,
 ```js
 export const layout = {
   explorer: false,
-  customfavIcon: 'string',
-  customCss: 'string',
-  customSiteTitle: 'string'
+  customfavIcon: "string",
+  customCss: "string",
+  customSiteTitle: "string",
 };
 
 export const specification = {
   info: {
-    name: 'string',
-    version: 'string',
-    description: 'string',
-    title: 'string',
+    name: "string",
+    version: "string",
+    description: "string",
+    title: "string",
   },
   servers: [
     {
-      url: 'string',
-    }
+      url: "string",
+    },
   ],
   components: {
     securitySchemes: {
       name: {
-        type: 'string',
-        name: 'string',
-        in: 'string',
+        type: "string",
+        name: "string",
+        in: "string",
       },
     },
     schemas: {
       name: {
-        type: 'string',
+        type: "string",
         properties: {
           name: {
-            type: 'string',
-            format: 'string',
-            description: 'string',
+            type: "string",
+            format: "string",
+            description: "string",
           },
-        }
-      }
+        },
+      },
     },
     responses: {
       default: {
-        description: 'string',
+        description: "string",
         content: {
-          'application/json': {
+          "application/json": {
             schema: {
-              $ref: 'string',
-            }
-          }
-        }
-      }
-    }
-  }
+              $ref: "string",
+            },
+          },
+        },
+      },
+    },
+  },
 };
 ```
 
 That done, you need to configure the server, which can be done as follows:
 
 ```js
-import cors from 'cors';
-import dotenv from 'dotenv';
-import bodyParser from 'body-parser';
+import cors from "cors";
+import dotenv from "dotenv";
+import bodyParser from "body-parser";
 
-import ExpressSwagger from 'express-swagger-delta';
-import { specification, layout } from './swagger';
+import ExpressSwagger from "express-swagger-delta";
+import { specification, layout } from "./swagger";
 
-import Log from './Log';
-import * as Controller from './controllers';
+import Log from "./Log";
+import * as Controller from "./controllers";
 
-class Server
-{
-  setConfigs()
-  {
-    if ((process.env.NODE_ENV + '').trim() !== 'PRODUCTION')
+class Server {
+  setConfigs() {
+    if ((process.env.NODE_ENV + "").trim() !== "PRODUCTION")
       dotenv.config({
-        path: './homolog',
+        path: "./homolog",
       });
 
     ExpressSwagger.Server.NODE_ENV = process.env.NODE_ENV;
@@ -110,10 +108,15 @@ class Server
     ExpressSwagger.Server.BASE_PATH = process.env.BASE_PATH;
     ExpressSwagger.Server.PORT = process.env.PORT;
 
-    ExpressSwagger.Server.setSwaggerProps({ layout: layout, specification: specification });
+    ExpressSwagger.Server.setSwaggerProps({
+      layout: layout,
+      specification: specification,
+    });
 
     ExpressSwagger.Server.serverApp.use(cors());
-    ExpressSwagger.Server.serverApp.use(bodyParser.urlencoded({ extended: true }));
+    ExpressSwagger.Server.serverApp.use(
+      bodyParser.urlencoded({ extended: true })
+    );
     ExpressSwagger.Server.serverApp.use(bodyParser.json());
 
     ExpressSwagger.Server.serverMiddleware = this.serverMiddleware;
@@ -123,27 +126,21 @@ class Server
     Controller.Employee.setRoutes();
   }
 
-  serverMiddleware(req, res, callback)
-  {
+  serverMiddleware(req, res, callback) {
     Log.authorization(req.headers)
-      .then((auth) =>
-      {
+      .then((auth) => {
         if (auth.statusCode == 200) {
           callback(req, res)
             .then((response) => Log.addLogSuccess(req, res, response))
             .catch((error) => Log.addLogError(req, res, error));
-        }
-        else {
-          return res
-            .status(auth.statusCode)
-            .json(auth);
+        } else {
+          return res.status(auth.statusCode).json(auth);
         }
       })
       .catch((error) => Log.addLogError(req, res, error));
   }
 
-  listen()
-  {
+  listen() {
     ExpressSwagger.Server.listen();
   }
 }
@@ -156,35 +153,32 @@ To add a route to the server it is necessary to create a file for building route
 **Note:** The parameter object follows the same structure pattern as [swagger.js documentation](https://swagger.io/docs/specification/describing-parameters/) (openapi: 3.0.0).
 
 ```js
-import Return from './Return';
-import ExpressSwagger from 'express-swagger-delta';
+import Return from "./Return";
+import ExpressSwagger from "express-swagger-delta";
 
-import UserService from './UserService';
+import UserService from "./UserService";
 
-class User
-{
-  setRoutes()
-  {
+class User {
+  setRoutes() {
     ExpressSwagger.Server.addRoute({
-      method: 'GET',
-      path: '/user',
-      tags: ['User'],
-      summary: 'message for description',
+      method: "GET",
+      path: "/user",
+      tags: ["User"],
+      summary: "message for description",
       auth: false, // If you are using the authMiddleware and need a public route (default is true)
       responses: {
         200: {
-          description: 'string',
-          $ref: '#/components/responses/default'
+          description: "string",
+          $ref: "#/components/responses/default",
         },
         400: {
-          description: 'string',
-          $ref: '#/components/responses/default'
+          description: "string",
+          $ref: "#/components/responses/default",
         },
       },
-      handler: async (req) =>
-      {		
+      handler: async (req) => {
         return await UserService.get();
-      }
+      },
     });
   }
 }
@@ -192,7 +186,26 @@ class User
 export default new User();
 ```
 
-## License
+## 🔹 Contributors
+
+<table>
+  <tr>
+    <td align="center">
+      <a href="https://github.com/donatocardoso">
+        <img src="https://avatars.githubusercontent.com/u/28939485?v=3" width="100px;" alt=""/><br />
+        <sub>🥇 <b>Donato C. Ávila</b></sub>
+      </a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/ThiagoOliveira001">
+        <img src="https://avatars.githubusercontent.com/u/18088052?v=3" width="100px;" alt=""/><br />
+        <sub><b>Thiago S. Oliveira</b></sub>
+      </a>
+    </td>
+  </tr>
+<table>
+
+## 🔹 License
 
 [MIT](LICENSE)
 

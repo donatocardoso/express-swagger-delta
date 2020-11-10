@@ -1,18 +1,30 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
 var __importStar = (this && this.__importStar) || function (mod) {
     if (mod && mod.__esModule) return mod;
     var result = {};
-    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
-    result["default"] = mod;
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
     return result;
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const cli_color_1 = __importDefault(require("cli-color"));
-const SwaggerUi = __importStar(require("swagger-ui-express"));
 const express_1 = __importDefault(require("express"));
+const SwaggerUi = __importStar(require("swagger-ui-express"));
 class FormatRoute {
     constructor(route) {
         this.express = route;
@@ -71,12 +83,13 @@ class Server {
         const { handler, path, method } = route;
         const formatedRoute = this._formatRoute(path.toString());
         const handles = [this._handler(handler)];
-        const methods = ['GET', 'POST', 'PUT', 'DELETE'];
+        const methods = ["GET", "POST", "PUT", "DELETE"];
         if (this.authMiddleware && route.auth !== false) {
             handles.unshift(this.authMiddleware);
         }
         if (methods.indexOf(method) > -1) {
-            this.router.route(formatedRoute.express)[method.toLowerCase()](...handles);
+            this.router
+                .route(formatedRoute.express)[method.toLowerCase()](...handles);
         }
         let routeConfig = {
             tags: route.tags,

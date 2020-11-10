@@ -1,16 +1,15 @@
 import color from "cli-color";
-import * as SwaggerUi from "swagger-ui-express";
 import express, { Express, Router } from "express";
-
+import * as SwaggerUi from "swagger-ui-express";
 import {
-  IServer,
-  ISwaggerProps,
-  ISpecification,
-  IInformation,
-  IServerConfig,
   IAnyObject,
   IBaseRoute,
   IFormatRoute,
+  IInformation,
+  IServer,
+  IServerConfig,
+  ISpecification,
+  ISwaggerProps,
 } from "./interfaces";
 
 class FormatRoute implements IFormatRoute {
@@ -110,6 +109,7 @@ class Server implements IServer {
         }`,
       })
     );
+
     this.authMiddleware = null;
   }
 
@@ -117,13 +117,16 @@ class Server implements IServer {
     const { handler, path, method } = route;
     const formatedRoute = this._formatRoute(path.toString());
     const handles = [this._handler(handler)];
-    const methods = ['GET', 'POST', 'PUT', 'DELETE'];
+    const methods = ["GET", "POST", "PUT", "DELETE"];
 
     if (this.authMiddleware && route.auth !== false) {
       handles.unshift(this.authMiddleware);
     }
+
     if (methods.indexOf(method) > -1) {
-      this.router.route(formatedRoute.express)[method.toLowerCase()](...handles);
+      this.router
+        .route(formatedRoute.express)
+        [method.toLowerCase()](...handles);
     }
 
     let routeConfig = {
@@ -177,6 +180,7 @@ class Server implements IServer {
       return this._showMessage('A propriedade "PORT" não foi inicializada');
 
     const routeDocs = this.BASE_PATH + "/docs";
+
     const swaggerSetup = SwaggerUi.setup(
       this.swaggerProps.specification,
       this.swaggerProps.layout
@@ -200,6 +204,7 @@ class Server implements IServer {
             color.black(message.replace(/([^\s][^\n]{1,75})/g, "$1 \n"))
           )
         );
+
         console.log("");
       });
 
@@ -246,7 +251,7 @@ class Server implements IServer {
   _handler(handler: any) {
     return (req: any, res: any) => {
       this.middleware(req, res, handler);
-    }
+    };
   }
 }
 

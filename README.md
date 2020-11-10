@@ -117,6 +117,7 @@ class Server
     ExpressSwagger.Server.serverApp.use(bodyParser.json());
 
     ExpressSwagger.Server.serverMiddleware = this.serverMiddleware;
+    ExpressSwagger.Server.authMiddleware = (req, res, next) => next(); // (optional) Auth middleware
 
     Controller.User.setRoutes();
     Controller.Employee.setRoutes();
@@ -169,6 +170,7 @@ class User
       path: '/user',
       tags: ['User'],
       summary: 'message for description',
+      auth: false, // If you are using the authMiddleware and need a public route (default is true)
       responses: {
         200: {
           description: 'string',

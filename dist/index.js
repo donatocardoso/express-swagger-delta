@@ -65,29 +65,18 @@ class Server {
             StatusCode: 200,
             Message: `${this.swaggerProps.specification.info.name.toUpperCase()}: OK! - process.env.NODE_ENV: ${this.NODE_ENV}`,
         }));
+        this.authMiddleware = null;
     }
     addRoute(route) {
-        const serverMiddleware = this.middleware;
-        const formatedRoute = this._formatRoute(route.path.toString());
-        if (route.method === "GET") {
-            this.router.route(formatedRoute.express).get(function (req, res) {
-                serverMiddleware(req, res, route.handler);
-            });
+        const { handler, path, method } = route;
+        const formatedRoute = this._formatRoute(path.toString());
+        const handles = [this._handler(handler)];
+        const methods = ['GET', 'POST', 'PUT', 'DELETE'];
+        if (this.authMiddleware && route.auth !== false) {
+            handles.unshift(this.authMiddleware);
         }
-        else if (route.method === "POST") {
-            this.router.route(formatedRoute.express).post(function (req, res) {
-                serverMiddleware(req, res, route.handler);
-            });
-        }
-        else if (route.method === "PUT") {
-            this.router.route(formatedRoute.express).put(function (req, res) {
-                serverMiddleware(req, res, route.handler);
-            });
-        }
-        else if (route.method === "DELETE") {
-            this.router.route(formatedRoute.express).delete(function (req, res) {
-                serverMiddleware(req, res, route.handler);
-            });
+        if (methods.indexOf(method) > -1) {
+            this.router.route(formatedRoute.express)[method.toLowerCase()](...handles);
         }
         let routeConfig = {
             tags: route.tags,
@@ -172,6 +161,11 @@ class Server {
         console.log(msg);
         console.log("");
         return false;
+    }
+    _handler(handler) {
+        return (req, res) => {
+            this.middleware(req, res, handler);
+        };
     }
 }
 exports.default = {

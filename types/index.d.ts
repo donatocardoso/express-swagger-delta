@@ -36,15 +36,17 @@ declare class Server implements IServer {
     BASE_PATH: string;
     PORT: number;
     app: Express;
-    router: Router;
+    router: Router | any;
     swaggerProps: ISwaggerProps;
     middleware: (req: any, res: any, callback: Function) => Function;
+    authMiddleware: null | ((req: any, res: any, next?: any) => any);
     constructor();
     addRoute(route: IBaseRoute): void;
     setSwaggerProps(props: ISwaggerProps): void;
     listen(): boolean;
     _formatRoute(route: string): IFormatRoute;
     _showMessage(msg: string): boolean;
+    _handler(handler: any): (req: any, res: any) => void;
 }
 declare const _default: {
     AnyObject: typeof AnyObject;

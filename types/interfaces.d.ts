@@ -11,6 +11,7 @@ export interface IBaseRoute {
     requestBody: object | null;
     responses: object;
     handler: Function;
+    auth: Boolean | null;
 }
 export interface IFormatRoute {
     express: string;
@@ -48,6 +49,7 @@ export interface IServer {
     router: Router;
     swaggerProps: ISwaggerProps;
     middleware: (req: any, res: any, callback: Function) => Function;
+    authMiddleware: null | ((req: any, res: any, next?: any) => any);
     addRoute(route: IBaseRoute): void;
     setSwaggerProps(props: ISwaggerProps): void;
     listen(): void;

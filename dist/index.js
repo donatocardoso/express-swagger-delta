@@ -22,9 +22,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Server = exports.SwaggerProps = exports.Specification = exports.Layout = exports.Information = exports.ServerConfig = exports.AnyObject = exports.FormatRoute = void 0;
+exports.server = exports.Server = exports.SwaggerProps = exports.Specification = exports.Layout = exports.Information = exports.ServerConfig = exports.AnyObject = exports.FormatRoute = void 0;
 //@ts-check
+const body_parser_1 = require("body-parser");
 const cli_color_1 = __importDefault(require("cli-color"));
+const cors_1 = __importDefault(require("cors"));
 const express_1 = __importDefault(require("express"));
 const SwaggerUi = __importStar(require("swagger-ui-express"));
 class FormatRoute {
@@ -81,6 +83,9 @@ class Server {
         this.app = express_1.default();
         this.routers = express_1.default.Router();
         this.swaggerProps = new SwaggerProps();
+        this.app.use(cors_1.default());
+        this.app.use(body_parser_1.urlencoded({ extended: true }));
+        this.app.use(body_parser_1.json({ limit: '8gb' }));
         this.routers.route('/').get((req, res) => {
             const name = this.swaggerProps.specification.info.name.toUpperCase();
             res.status(200).json({
@@ -94,7 +99,7 @@ class Server {
         // Express
         const { handler, path, method } = route;
         const formatedRoute = this._formatRoute(path.toString());
-        const router = express_1.default.Router();
+        const router = this.routers.use(this.BASE_PATH);
         if (this.middleware) {
             router.use(this.middleware);
         }
@@ -115,7 +120,6 @@ class Server {
                 router.route(formatedRoute.express).delete(handler);
                 break;
         }
-        this.routers.bind(router);
         // Swagger
         let routeConfig = {
             tags: route.tags,
@@ -137,7 +141,10 @@ class Server {
             Object.assign(routeConfig, {
                 requestBody: route.requestBody,
             });
-        if (this.swaggerProps.specification.paths[formatedRoute.swagger]) {
+        if (!this.swaggerProps.specification.paths) {
+            this.swaggerProps.specification.paths = {};
+        }
+        else if (this.swaggerProps.specification.paths[formatedRoute.swagger]) {
             Object.assign(this.swaggerProps.specification.paths[formatedRoute.swagger], {
                 [route.method.toLowerCase()]: routeConfig,
             });
@@ -162,14 +169,14 @@ class Server {
         const routeDocs = this.BASE_PATH + '/documentation';
         const swaggerSetup = SwaggerUi.setup(this.swaggerProps.specification, this.swaggerProps.layout);
         this.app
-            .use(this.BASE_PATH, this.routers)
+            .use(this.routers)
             .use(routeDocs, SwaggerUi.serve, swaggerSetup)
             .listen(this.PORT, () => {
             var _name = `\n ${this.swaggerProps.specification.info.name.toUpperCase()} `;
             var _description = `\n ${this.swaggerProps.specification.info.description} `;
             var _environment = `\n process.env.NODE_ENV: ${this.NODE_ENV} `;
             var _baseRoute = `\n Base Route: http://${this.BASE_HOST}:${this.PORT}${this.BASE_PATH} `;
-            var _docsRoute = `\n Docs Route: http://${this.BASE_HOST}:${this.PORT}${this.BASE_PATH}/docs `;
+            var _docsRoute = `\n Docs Route: http://${this.BASE_HOST}:${this.PORT}${routeDocs} `;
             var message = `\n${_name} ${_description} ${_environment} ${_baseRoute} ${_docsRoute}`;
             console.log(cli_color_1.default.bgWhite(cli_color_1.default.black(message.replace(/([^\s][^\n]{1,75})/g, '$1 \n'))));
             console.log('');
@@ -206,6 +213,7 @@ class Server {
     }
 }
 exports.Server = Server;
+exports.server = new Server();
 exports.default = {
     AnyObject: AnyObject,
     ServerConfig: ServerConfig,

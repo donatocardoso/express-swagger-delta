@@ -1,5 +1,7 @@
 //@ts-check
+import { json, urlencoded } from 'body-parser';
 import color from 'cli-color';
+import cors from 'cors';
 import express from 'express';
 import * as SwaggerUi from 'swagger-ui-express';
 import {
@@ -53,11 +55,11 @@ export class Information implements IInformation {
 export class Layout implements SwaggerUi.SwaggerUiOptions {}
 
 export class Specification implements ISpecification {
-  openapi: string;
+  openapi?: string;
   info: IInformation;
   servers: IServerConfig[];
   components: IAnyObject;
-  paths: IAnyObject;
+  paths?: IAnyObject;
 
   constructor() {
     this.openapi = '3.0.0';
@@ -102,6 +104,10 @@ export class Server implements IServer {
 
     this.swaggerProps = new SwaggerProps();
 
+    this.app.use(cors());
+    this.app.use(urlencoded({ extended: true }));
+    this.app.use(json({ limit: '8gb' }));
+
     this.routers.route('/').get((req: any, res: any) => {
       const name = this.swaggerProps.specification.info.name.toUpperCase();
 
@@ -118,7 +124,7 @@ export class Server implements IServer {
     const { handler, path, method } = route;
     const formatedRoute = this._formatRoute(path.toString());
 
-    const router = express.Router();
+    const router = this.routers.use(this.BASE_PATH);
 
     if (this.middleware) {
       router.use(this.middleware);
@@ -142,8 +148,6 @@ export class Server implements IServer {
         router.route(formatedRoute.express).delete(handler);
         break;
     }
-
-    this.routers.bind(router);
 
     // Swagger
     let routeConfig = {
@@ -171,7 +175,9 @@ export class Server implements IServer {
         requestBody: route.requestBody,
       });
 
-    if (this.swaggerProps.specification.paths[formatedRoute.swagger]) {
+    if (!this.swaggerProps.specification.paths) {
+      this.swaggerProps.specification.paths = {};
+    } else if (this.swaggerProps.specification.paths[formatedRoute.swagger]) {
       Object.assign(this.swaggerProps.specification.paths[formatedRoute.swagger], {
         [route.method.toLowerCase()]: routeConfig,
       });
@@ -197,7 +203,7 @@ export class Server implements IServer {
     const swaggerSetup = SwaggerUi.setup(this.swaggerProps.specification, this.swaggerProps.layout);
 
     this.app
-      .use(this.BASE_PATH, this.routers)
+      .use(this.routers)
       .use(routeDocs, SwaggerUi.serve, swaggerSetup)
       .listen(this.PORT, () => {
         var _name = `\n ${this.swaggerProps.specification.info.name.toUpperCase()} `;
@@ -205,7 +211,7 @@ export class Server implements IServer {
 
         var _environment = `\n process.env.NODE_ENV: ${this.NODE_ENV} `;
         var _baseRoute = `\n Base Route: http://${this.BASE_HOST}:${this.PORT}${this.BASE_PATH} `;
-        var _docsRoute = `\n Docs Route: http://${this.BASE_HOST}:${this.PORT}${this.BASE_PATH}/docs `;
+        var _docsRoute = `\n Docs Route: http://${this.BASE_HOST}:${this.PORT}${routeDocs} `;
 
         var message = `\n${_name} ${_description} ${_environment} ${_baseRoute} ${_docsRoute}`;
 
@@ -253,6 +259,8 @@ export class Server implements IServer {
     return false;
   }
 }
+
+export const server = new Server();
 
 export default {
   AnyObject: AnyObject,

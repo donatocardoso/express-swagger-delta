@@ -13,7 +13,7 @@
     "strict": true,
     "strictNullChecks": true,
     "target": "es6",
-    "typeRoots": ["./types", "./node_modules/@types/*"]
+    "typeRoots": ["./types"]
   },
   "include": ["./src/**/*.ts"],
   "exclude": ["./node_modules/*", "./types/**/*.ts"]

@@ -23,11 +23,11 @@ export declare class Information implements IInformation {
 export declare class Layout implements SwaggerUi.SwaggerUiOptions {
 }
 export declare class Specification implements ISpecification {
-    openapi: string;
+    openapi?: string;
     info: IInformation;
     servers: IServerConfig[];
     components: IAnyObject;
-    paths: IAnyObject;
+    paths?: IAnyObject;
     constructor();
 }
 export declare class SwaggerProps implements ISwaggerProps {
@@ -52,6 +52,7 @@ export declare class Server implements IServer {
     _formatRoute(route: string): IFormatRoute;
     _showMessage(msg: string): boolean;
 }
+export declare const server: Server;
 declare const _default: {
     AnyObject: typeof AnyObject;
     ServerConfig: typeof ServerConfig;

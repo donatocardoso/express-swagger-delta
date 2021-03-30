@@ -1,7 +1,7 @@
 //@ts-check
+import { BaseParameter, BodyParameter, Reference, Response, Security } from 'swagger-schema-official';
 import express from 'express';
 import { PathParams } from 'express-serve-static-core';
-import { BaseParameter, BodyParameter, Reference, Response, Security } from 'swagger-schema-official';
 import { SwaggerUiOptions } from 'swagger-ui-express';
 
 export interface IBaseRoute {
@@ -10,9 +10,9 @@ export interface IBaseRoute {
   path: PathParams;
   tags: Array<string>;
   summary: string;
-  security?: Security[];
   parameters?: BaseParameter[];
   requestBody?: BodyParameter;
+  security?: { [securityName: string]: Security }[];
   responses?: { [responseName: string]: Response | Reference };
   handler: (req: express.Request, res: express.Response) => void;
 }
@@ -40,11 +40,11 @@ export interface IAnyObject {
 }
 
 export interface ISpecification {
-  openapi: string;
+  openapi?: string;
   info: IInformation;
   servers: Array<IServerConfig>;
   components: IAnyObject;
-  paths: IAnyObject;
+  paths?: IAnyObject;
 }
 
 export interface ISwaggerProps {

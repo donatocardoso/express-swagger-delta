@@ -1,23 +1,28 @@
-import { Express, Router } from "express";
-import * as SwaggerUi from "swagger-ui-express";
-import { IAnyObject, IBaseRoute, IFormatRoute, IInformation, IServer, IServerConfig, ISpecification, ISwaggerProps } from "./interfaces";
-declare class AnyObject implements IAnyObject {
+import express from 'express';
+import * as SwaggerUi from 'swagger-ui-express';
+import { IAnyObject, IBaseRoute, IFormatRoute, IHandler, IInformation, IServer, IServerConfig, ISpecification, ISwaggerProps } from './interfaces';
+export declare class FormatRoute implements IFormatRoute {
+    express: string;
+    swagger: string;
+    constructor(route: string);
+}
+export declare class AnyObject implements IAnyObject {
     [key: string]: object;
 }
-declare class ServerConfig implements IServerConfig {
+export declare class ServerConfig implements IServerConfig {
     url: string;
     constructor();
 }
-declare class Information implements IInformation {
+export declare class Information implements IInformation {
     name: string;
     title: string;
     version: string;
     description: string;
     constructor();
 }
-declare class Layout implements SwaggerUi.SwaggerUiOptions {
+export declare class Layout implements SwaggerUi.SwaggerUiOptions {
 }
-declare class Specification implements ISpecification {
+export declare class Specification implements ISpecification {
     openapi: string;
     info: IInformation;
     servers: IServerConfig[];
@@ -25,28 +30,27 @@ declare class Specification implements ISpecification {
     paths: IAnyObject;
     constructor();
 }
-declare class SwaggerProps implements ISwaggerProps {
+export declare class SwaggerProps implements ISwaggerProps {
     layout: SwaggerUi.SwaggerUiOptions;
     specification: ISpecification;
     constructor();
 }
-declare class Server implements IServer {
+export declare class Server implements IServer {
     NODE_ENV: string;
     BASE_HOST: string;
     BASE_PATH: string;
     PORT: number;
-    app: Express;
-    router: Router | any;
+    app: express.Express;
+    routers: express.Router;
     swaggerProps: ISwaggerProps;
-    middleware: (req: any, res: any, callback: Function) => Function;
-    authMiddleware: null | ((req: any, res: any, next?: any) => any);
+    middleware?: (req: express.Request, res: express.Response, callback?: IHandler) => any;
+    authMiddleware?: (req: express.Request, res: express.Response, next?: express.NextFunction) => any;
     constructor();
     addRoute(route: IBaseRoute): void;
     setSwaggerProps(props: ISwaggerProps): void;
     listen(): boolean;
     _formatRoute(route: string): IFormatRoute;
     _showMessage(msg: string): boolean;
-    _handler(handler: any): (req: any, res: any) => void;
 }
 declare const _default: {
     AnyObject: typeof AnyObject;

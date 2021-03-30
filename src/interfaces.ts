@@ -1,19 +1,23 @@
-import { Express, Router } from "express";
-import { PathParams } from "express-serve-static-core";
-import { SwaggerUiOptions } from "swagger-ui-express";
+//@ts-check
+import express from 'express';
+import { PathParams } from 'express-serve-static-core';
+import { BaseParameter, BodyParameter, Reference, Response, Security } from 'swagger-schema-official';
+import { SwaggerUiOptions } from 'swagger-ui-express';
 
 export interface IBaseRoute {
-  method: string | "GET" | "POST" | "PUT" | "DELETE";
+  auth?: boolean;
+  method: string | 'GET' | 'POST' | 'PUT' | 'DELETE';
   path: PathParams;
   tags: Array<string>;
   summary: string;
-  security: Array<object>;
-  parameters: object | null;
-  requestBody: object | null;
-  responses: object;
-  handler: Function;
-  auth: Boolean | null;
+  security?: Security[];
+  parameters?: BaseParameter[];
+  requestBody?: BodyParameter;
+  responses?: { [responseName: string]: Response | Reference };
+  handler: (req: express.Request, res: express.Response) => void;
 }
+
+export type IHandler = (req: express.Request, res: express.Response) => any;
 
 export interface IFormatRoute {
   express: string;
@@ -51,15 +55,15 @@ export interface ISwaggerProps {
 export interface IServer {
   NODE_ENV: string;
   BASE_HOST: string;
-  BASE_PATH: string | "";
+  BASE_PATH: string;
   PORT: number;
 
-  app: Express;
-  router: Router;
+  app: express.Express;
+  routers: express.Router;
   swaggerProps: ISwaggerProps;
 
-  middleware: (req: any, res: any, callback: Function) => Function;
-  authMiddleware: null | ((req: any, res: any, next?: any) => any);
+  middleware?: (req: express.Request, res: express.Response, callback?: IHandler) => any;
+  authMiddleware?: (req: express.Request, res: express.Response, next?: express.NextFunction) => any;
 
   addRoute(route: IBaseRoute): void;
   setSwaggerProps(props: ISwaggerProps): void;

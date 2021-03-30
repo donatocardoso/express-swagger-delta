@@ -99,25 +99,22 @@ class Server {
         // Express
         const { handler, path, method } = route;
         const formatedRoute = this._formatRoute(path.toString());
-        const router = this.routers.use(this.BASE_PATH);
-        if (this.middleware) {
-            router.use(this.middleware);
-        }
-        if (this.authMiddleware && route.auth) {
-            router.use(this.authMiddleware);
+        const handles = [this._handler(handler)];
+        if (this.authMiddleware && route.auth !== false) {
+            handles.unshift(this.authMiddleware);
         }
         switch (method.toLowerCase()) {
             case 'get':
-                router.route(formatedRoute.express).get(handler);
+                this.routers.route(formatedRoute.express).get(...handles);
                 break;
             case 'post':
-                router.route(formatedRoute.express).post(handler);
+                this.routers.route(formatedRoute.express).post(...handles);
                 break;
             case 'put':
-                router.route(formatedRoute.express).put(handler);
+                this.routers.route(formatedRoute.express).put(...handles);
                 break;
             case 'delete':
-                router.route(formatedRoute.express).delete(handler);
+                this.routers.route(formatedRoute.express).delete(...handles);
                 break;
         }
         // Swagger
@@ -159,19 +156,27 @@ class Server {
         Object.assign(this.swaggerProps.layout, props.layout);
         Object.assign(this.swaggerProps.specification, props.specification);
     }
-    listen() {
+    initialize() {
+        if (!this.NODE_ENV)
+            this._showMessage('A propriedade "NODE_ENV" deve ser inicializada');
+        if (!this.BASE_HOST)
+            this._showMessage('A propriedade "BASE_HOST" deve ser inicializada');
+        if (!this.PORT)
+            this._showMessage('A propriedade "PORT" deve ser inicializada');
+        const routeDocs = this.BASE_PATH + '/documentation';
+        const swaggerSetup = SwaggerUi.setup(this.swaggerProps.specification, this.swaggerProps.layout);
+        this.app.use(this.BASE_PATH, this.routers).use(routeDocs, SwaggerUi.serve, swaggerSetup);
+        return this.app;
+    }
+    listen(port) {
         if (!this.NODE_ENV)
             return this._showMessage('A propriedade "NODE_ENV" não foi inicializada');
         if (!this.BASE_HOST)
             return this._showMessage('A propriedade "BASE_HOST" não foi inicializada');
-        if (!this.PORT)
+        if (!port && !this.PORT)
             return this._showMessage('A propriedade "PORT" não foi inicializada');
         const routeDocs = this.BASE_PATH + '/documentation';
-        const swaggerSetup = SwaggerUi.setup(this.swaggerProps.specification, this.swaggerProps.layout);
-        this.app
-            .use(this.routers)
-            .use(routeDocs, SwaggerUi.serve, swaggerSetup)
-            .listen(this.PORT, () => {
+        this.app.listen(port || this.PORT, () => {
             var _name = `\n ${this.swaggerProps.specification.info.name.toUpperCase()} `;
             var _description = `\n ${this.swaggerProps.specification.info.description} `;
             var _environment = `\n process.env.NODE_ENV: ${this.NODE_ENV} `;
@@ -210,6 +215,12 @@ class Server {
         console.log(msg);
         console.log('');
         return false;
+    }
+    _handler(handler) {
+        return (req, res) => {
+            if (this.middleware)
+                this.middleware(req, res, handler);
+        };
     }
 }
 exports.Server = Server;

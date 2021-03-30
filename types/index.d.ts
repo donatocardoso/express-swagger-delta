@@ -48,9 +48,11 @@ export declare class Server implements IServer {
     constructor();
     addRoute(route: IBaseRoute): void;
     setSwaggerProps(props: ISwaggerProps): void;
-    listen(): boolean;
+    initialize(): express.Express;
+    listen(port?: number): boolean;
     _formatRoute(route: string): IFormatRoute;
     _showMessage(msg: string): boolean;
+    _handler(handler: IHandler): (req: any, res: any) => void;
 }
 export declare const server: Server;
 declare const _default: {

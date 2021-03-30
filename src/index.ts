@@ -123,29 +123,24 @@ export class Server implements IServer {
     // Express
     const { handler, path, method } = route;
     const formatedRoute = this._formatRoute(path.toString());
+    const handles = [this._handler(handler)];
 
-    const router = this.routers.use(this.BASE_PATH);
-
-    if (this.middleware) {
-      router.use(this.middleware);
-    }
-
-    if (this.authMiddleware && route.auth) {
-      router.use(this.authMiddleware);
+    if (this.authMiddleware && route.auth !== false) {
+      handles.unshift(this.authMiddleware);
     }
 
     switch (method.toLowerCase()) {
       case 'get':
-        router.route(formatedRoute.express).get(handler);
+        this.routers.route(formatedRoute.express).get(...handles);
         break;
       case 'post':
-        router.route(formatedRoute.express).post(handler);
+        this.routers.route(formatedRoute.express).post(...handles);
         break;
       case 'put':
-        router.route(formatedRoute.express).put(handler);
+        this.routers.route(formatedRoute.express).put(...handles);
         break;
       case 'delete':
-        router.route(formatedRoute.express).delete(handler);
+        this.routers.route(formatedRoute.express).delete(...handles);
         break;
     }
 
@@ -193,32 +188,41 @@ export class Server implements IServer {
     Object.assign(this.swaggerProps.specification, props.specification);
   }
 
-  listen(): boolean {
-    if (!this.NODE_ENV) return this._showMessage('A propriedade "NODE_ENV" não foi inicializada');
-    if (!this.BASE_HOST) return this._showMessage('A propriedade "BASE_HOST" não foi inicializada');
-    if (!this.PORT) return this._showMessage('A propriedade "PORT" não foi inicializada');
+  initialize(): express.Express {
+    if (!this.NODE_ENV) this._showMessage('A propriedade "NODE_ENV" deve ser inicializada');
+    if (!this.BASE_HOST) this._showMessage('A propriedade "BASE_HOST" deve ser inicializada');
+    if (!this.PORT) this._showMessage('A propriedade "PORT" deve ser inicializada');
 
     const routeDocs = this.BASE_PATH + '/documentation';
 
     const swaggerSetup = SwaggerUi.setup(this.swaggerProps.specification, this.swaggerProps.layout);
 
-    this.app
-      .use(this.routers)
-      .use(routeDocs, SwaggerUi.serve, swaggerSetup)
-      .listen(this.PORT, () => {
-        var _name = `\n ${this.swaggerProps.specification.info.name.toUpperCase()} `;
-        var _description = `\n ${this.swaggerProps.specification.info.description} `;
+    this.app.use(this.BASE_PATH, this.routers).use(routeDocs, SwaggerUi.serve, swaggerSetup);
 
-        var _environment = `\n process.env.NODE_ENV: ${this.NODE_ENV} `;
-        var _baseRoute = `\n Base Route: http://${this.BASE_HOST}:${this.PORT}${this.BASE_PATH} `;
-        var _docsRoute = `\n Docs Route: http://${this.BASE_HOST}:${this.PORT}${routeDocs} `;
+    return this.app;
+  }
 
-        var message = `\n${_name} ${_description} ${_environment} ${_baseRoute} ${_docsRoute}`;
+  listen(port?: number): boolean {
+    if (!this.NODE_ENV) return this._showMessage('A propriedade "NODE_ENV" não foi inicializada');
+    if (!this.BASE_HOST) return this._showMessage('A propriedade "BASE_HOST" não foi inicializada');
+    if (!port && !this.PORT) return this._showMessage('A propriedade "PORT" não foi inicializada');
 
-        console.log(color.bgWhite(color.black(message.replace(/([^\s][^\n]{1,75})/g, '$1 \n'))));
+    const routeDocs = this.BASE_PATH + '/documentation';
 
-        console.log('');
-      });
+    this.app.listen(port || this.PORT, () => {
+      var _name = `\n ${this.swaggerProps.specification.info.name.toUpperCase()} `;
+      var _description = `\n ${this.swaggerProps.specification.info.description} `;
+
+      var _environment = `\n process.env.NODE_ENV: ${this.NODE_ENV} `;
+      var _baseRoute = `\n Base Route: http://${this.BASE_HOST}:${this.PORT}${this.BASE_PATH} `;
+      var _docsRoute = `\n Docs Route: http://${this.BASE_HOST}:${this.PORT}${routeDocs} `;
+
+      var message = `\n${_name} ${_description} ${_environment} ${_baseRoute} ${_docsRoute}`;
+
+      console.log(color.bgWhite(color.black(message.replace(/([^\s][^\n]{1,75})/g, '$1 \n'))));
+
+      console.log('');
+    });
 
     return true;
   }
@@ -257,6 +261,12 @@ export class Server implements IServer {
     console.log('');
 
     return false;
+  }
+
+  _handler(handler: IHandler) {
+    return (req: any, res: any) => {
+      if (this.middleware) this.middleware(req, res, handler);
+    };
   }
 }
 

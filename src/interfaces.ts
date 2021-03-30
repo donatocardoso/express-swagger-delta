@@ -1,7 +1,7 @@
 //@ts-check
-import { BaseParameter, BodyParameter, Reference, Response, Security } from 'swagger-schema-official';
 import express from 'express';
 import { PathParams } from 'express-serve-static-core';
+import { BaseParameter, BodyParameter, Reference, Response, Security } from 'swagger-schema-official';
 import { SwaggerUiOptions } from 'swagger-ui-express';
 
 export interface IBaseRoute {
@@ -67,5 +67,6 @@ export interface IServer {
 
   addRoute(route: IBaseRoute): void;
   setSwaggerProps(props: ISwaggerProps): void;
-  listen(): void;
+  initialize(): express.Express;
+  listen(port?: number): void;
 }

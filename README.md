@@ -6,6 +6,10 @@ Fast, unopinionated, minimalist web framework for [node](http://nodejs.org).
 
 [![NPM Version][npm-image]][npm-url]
 [![NPM Downloads][downloads-image]][downloads-url]
+![badge-statements]
+![badge-branches]
+![badge-functions]
+![badge-lines]
 
 ## 🔹 Installation
 
@@ -21,6 +25,12 @@ Installation is done using the
 $ npm install express-swagger-delta
 ```
 
+OU
+
+```bash
+$ yarn add express-swagger-delta
+```
+
 ## 🔹 Usage
 
 To start using the library, it is necessary to create a base configuration file, following the structure:
@@ -28,52 +38,64 @@ To start using the library, it is necessary to create a base configuration file,
 **Note:** Follows the same structure pattern as the [swagger.js documentation](https://swagger.io/docs/specification/basic-structure/) (openapi: 3.0.0).
 
 ```js
+import { description, name, version } from '../../package.json';
+
 export const layout = {
   explorer: false,
-  customfavIcon: "string",
-  customCss: "string",
-  customSiteTitle: "string",
+  customSiteTitle: 'Example Documentation',
+  customCss: '.swagger-ui .topbar { display: none }',
+  swaggerOptions: {
+    docExpansion: 'none',
+  },
 };
 
 export const specification = {
   info: {
-    name: "string",
-    version: "string",
-    description: "string",
-    title: "string",
+    name: name,
+    version: version,
+    description: description,
+    title: 'Example Documentation',
   },
   servers: [
     {
-      url: "string",
+      url: `http://localhost:8080/api`,
     },
   ],
   components: {
     securitySchemes: {
-      name: {
-        type: "string",
-        name: "string",
-        in: "string",
+      ExampleKey: {
+        in: 'header',
+        type: 'apiKey',
+        name: 'ExampleKey',
       },
     },
     schemas: {
-      name: {
-        type: "string",
+      Return: {
+        type: 'object',
         properties: {
-          name: {
-            type: "string",
-            format: "string",
-            description: "string",
+          statusCode: {
+            type: 'integer',
+            format: 'int64',
+            description: 'Request Status Code',
+          },
+          message: {
+            type: 'string',
+            description: 'Request Status Message',
+          },
+          content: {
+            type: 'object',
+            description: 'Request Content',
           },
         },
       },
     },
     responses: {
       default: {
-        description: "string",
+        description: 'Api Default Return',
         content: {
-          "application/json": {
+          'application/json': {
             schema: {
-              $ref: "string",
+              $ref: '#/components/schemas/Return',
             },
           },
         },
@@ -86,63 +108,63 @@ export const specification = {
 That done, you need to configure the server, which can be done as follows:
 
 ```js
-import cors from "cors";
-import dotenv from "dotenv";
-import bodyParser from "body-parser";
-
-import ExpressSwagger from "express-swagger-delta";
-import { specification, layout } from "./swagger";
-
-import Log from "./Log";
-import * as Controller from "./controllers";
+import { json, urlencoded } from 'body-parser';
+import cors from 'cors';
+import helmet from 'helmet';
+import ExpressSwagger from '../../dist/index';
+import ExampleController from '../controllers/ExampleController';
+import AuthService from '../services/AuthService';
+import { layout, specification } from './swagger';
 
 class Server {
-  setConfigs() {
-    if ((process.env.NODE_ENV + "").trim() !== "PRODUCTION")
-      dotenv.config({
-        path: "./homolog",
-      });
+  constructor() {
+    this.server = ExpressSwagger.Server;
 
-    ExpressSwagger.Server.NODE_ENV = process.env.NODE_ENV;
-    ExpressSwagger.Server.BASE_HOST = process.env.BASE_HOST;
-    ExpressSwagger.Server.BASE_PATH = process.env.BASE_PATH;
-    ExpressSwagger.Server.PORT = process.env.PORT;
+    this.server.NODE_ENV = 'test';
+    this.server.BASE_HOST = 'localhost';
+    this.server.BASE_PATH = '/api';
+    this.server.PORT = 8080;
 
-    ExpressSwagger.Server.setSwaggerProps({
+    this.server.setSwaggerProps({
       layout: layout,
       specification: specification,
     });
 
-    ExpressSwagger.Server.serverApp.use(cors());
-    ExpressSwagger.Server.serverApp.use(
-      bodyParser.urlencoded({ extended: true })
-    );
-    ExpressSwagger.Server.serverApp.use(bodyParser.json());
+    this.server.app.use(cors());
+    this.server.app.use(helmet());
+    this.server.app.use(urlencoded({ extended: true }));
+    this.server.app.use(json({ limit: '2gb' }));
 
-    ExpressSwagger.Server.serverMiddleware = this.serverMiddleware;
-    ExpressSwagger.Server.authMiddleware = (req, res, next) => next(); // (optional) Auth middleware
+    this.server.middleware = this.middleware;
+    this.server.authMiddleware = this.authMiddleware;
 
-    Controller.User.setRoutes();
-    Controller.Employee.setRoutes();
+    ExampleController.setRoutes();
+
+    this.server.initialize();
   }
 
-  serverMiddleware(req, res, callback) {
-    Log.authorization(req.headers)
+  authMiddleware(req, res, next) {
+    AuthService.checkAuth(req)
       .then((auth) => {
-        if (auth.statusCode == 200) {
-          callback(req, res)
-            .then((response) => Log.addLogSuccess(req, res, response))
-            .catch((error) => Log.addLogError(req, res, error));
-        } else {
-          return res.status(auth.statusCode).json(auth);
+        switch (auth.statusCode) {
+          case 200:
+            return next();
+          case 400:
+            return res.status(400).json(auth);
+          case 401:
+            return res.status(401).json(auth);
         }
       })
-      .catch((error) => Log.addLogError(req, res, error));
+      .catch((err) => res.status(500).json(err));
   }
 
-  listen() {
-    ExpressSwagger.Server.listen();
+  middleware(req, res, callback) {
+    callback(req, res)
+      .then((data) => res.status(data.statusCode).json(data))
+      .catch((err) => res.status(500).json(err));
   }
+
+  listen = (port) => this.server.listen(port);
 }
 
 export default new Server();
@@ -153,37 +175,55 @@ To add a route to the server it is necessary to create a file for building route
 **Note:** The parameter object follows the same structure pattern as [swagger.js documentation](https://swagger.io/docs/specification/describing-parameters/) (openapi: 3.0.0).
 
 ```js
-import Return from "./Return";
-import ExpressSwagger from "express-swagger-delta";
+import ExpressSwagger from '../../dist/index';
+import { specification } from '../configs/swagger';
+import Return from '../models/Return';
 
-import UserService from "./UserService";
-
-class User {
-  setRoutes() {
+export default class ExampleController {
+  static setRoutes() {
     ExpressSwagger.Server.addRoute({
-      method: "GET",
-      path: "/user",
-      tags: ["User"],
-      summary: "message for description",
-      auth: false, // If you are using the authMiddleware and need a public route (default is true)
-      responses: {
-        200: {
-          description: "string",
-          $ref: "#/components/responses/default",
-        },
-        400: {
-          description: "string",
-          $ref: "#/components/responses/default",
-        },
-      },
+      auth: true,
+      method: 'GET',
+      path: '/example',
+      tags: ['Example'],
+      summary: 'Example Controller',
+      security: [specification.components.securitySchemes],
+      responses: specification.components.responses,
       handler: async (req) => {
-        return await UserService.get();
+        return new Return(200, 'OK', {
+          date: new Date(),
+        });
+      },
+    });
+
+    ExpressSwagger.Server.addRoute({
+      auth: true,
+      method: 'GET',
+      path: '/example/:text',
+      tags: ['Example'],
+      summary: 'Example Controller',
+      security: [specification.components.securitySchemes],
+      responses: specification.components.responses,
+      parameters: [
+        {
+          in: 'path',
+          required: true,
+          name: 'text',
+          schema: {
+            type: 'string',
+          },
+          description: 'Text to print in the response',
+        },
+      ],
+      handler: async (req) => {
+        return new Return(200, 'OK', {
+          date: new Date(),
+          text: req.params.text,
+        });
       },
     });
   }
 }
-
-export default new User();
 ```
 
 ## 🔹 Contributors
@@ -209,6 +249,10 @@ export default new User();
 
 [MIT](LICENSE)
 
+[badge-branches]: ./__tests__/badges/badge-branches.svg
+[badge-functions]: ./__tests__/badges/badge-functions.svg
+[badge-lines]: ./__tests__/badges/badge-lines.svg
+[badge-statements]: ./__tests__/badges/badge-statements.svg
 [npm-image]: https://img.shields.io/npm/v/express-swagger-delta.svg
 [npm-url]: https://npmjs.org/package/express-swagger-delta
 [downloads-image]: https://img.shields.io/npm/dm/express-swagger-delta.svg

@@ -1,7 +1,4 @@
-//@ts-check
-import { json, urlencoded } from 'body-parser';
 import color from 'cli-color';
-import cors from 'cors';
 import express from 'express';
 import * as SwaggerUi from 'swagger-ui-express';
 import {
@@ -103,10 +100,6 @@ export class Server implements IServer {
     this.routers = express.Router();
 
     this.swaggerProps = new SwaggerProps();
-
-    this.app.use(cors());
-    this.app.use(urlencoded({ extended: true }));
-    this.app.use(json({ limit: '8gb' }));
 
     this.routers.route('/').get((req: any, res: any) => {
       const name = this.swaggerProps.specification.info.name.toUpperCase();

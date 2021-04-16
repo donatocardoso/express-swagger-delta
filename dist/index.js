@@ -23,10 +23,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.server = exports.Server = exports.SwaggerProps = exports.Specification = exports.Layout = exports.Information = exports.ServerConfig = exports.AnyObject = exports.FormatRoute = void 0;
-//@ts-check
-const body_parser_1 = require("body-parser");
 const cli_color_1 = __importDefault(require("cli-color"));
-const cors_1 = __importDefault(require("cors"));
 const express_1 = __importDefault(require("express"));
 const SwaggerUi = __importStar(require("swagger-ui-express"));
 class FormatRoute {
@@ -83,9 +80,6 @@ class Server {
         this.app = express_1.default();
         this.routers = express_1.default.Router();
         this.swaggerProps = new SwaggerProps();
-        this.app.use(cors_1.default());
-        this.app.use(body_parser_1.urlencoded({ extended: true }));
-        this.app.use(body_parser_1.json({ limit: '8gb' }));
         this.routers.route('/').get((req, res) => {
             const name = this.swaggerProps.specification.info.name.toUpperCase();
             res.status(200).json({
